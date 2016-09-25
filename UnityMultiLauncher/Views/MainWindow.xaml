@@ -1,0 +1,73 @@
+﻿<Controls:MetroWindow x:Name="metroWindow" x:Class="UnityMultiLauncher.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+					  xmlns:VM="clr-namespace:UnityMultiLauncher.ViewModels"
+					  xmlns:Converter="clr-namespace:UnityMultiLauncher.Controls.Converters"
+                      Title="Unity Multi Launcher"
+                      Height="600"
+                      Width="800">
+	<Window.Resources>
+		<VM:UnityViewModel x:Key="unity"></VM:UnityViewModel>
+		<Converter:UnityUriToUnityVersion x:Key="uriToVersion"/>
+	</Window.Resources>
+
+	<Controls:MetroWindow.RightWindowCommands>
+		<Controls:WindowCommands>
+			<Button Content="Add Unity Executable" Command="{Binding addUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
+		</Controls:WindowCommands>
+	</Controls:MetroWindow.RightWindowCommands>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" MinHeight="100" />
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<ItemsControl ItemsSource="{Binding unityLocations, Source={StaticResource unity}}" HorizontalAlignment="Center" >
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Button HorizontalAlignment="Center" VerticalAlignment="Center" Command="{Binding launchUnity, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding}">
+						<StackPanel>
+							<Image Source="pack://application:,,,/Resources/LargeUnityIcon.png" StretchDirection="DownOnly" Cursor="Hand" Height="50"/>
+							<Label Content="{Binding Converter={StaticResource uriToVersion}, Mode=OneWay}"/>
+						</StackPanel>
+					</Button>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Rows="1">
+
+					</UniformGrid>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+		</ItemsControl>
+		<ListBox Grid.Row="1" ItemsSource="{Binding unityProjectLocations, Source={StaticResource unity}}" >
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Button HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding launchUnityProject, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding Item1, Mode=OneWay}">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+							<Label Content="{Binding Item1.LocalPath, Mode=OneWay}" Grid.Row="1"/>
+							<Label Content="{Binding Item2, Mode=OneWay}"/>
+							<Label Content="{Binding Item3, Mode=OneWay}" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+						</Grid>
+						<!--<Label>
+							<Span>
+
+							</Span>
+						</Label>-->
+					</Button>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</Grid>
+
+</Controls:MetroWindow>
