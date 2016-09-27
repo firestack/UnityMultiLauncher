@@ -18,6 +18,7 @@ namespace UnityMultiLauncher.ViewModels
 		{
 
 			System.Diagnostics.Process.Start(unityExe.LocalPath);
+			UpdateProperty(nameof(unityProjectLocations));
 		}
 
 		protected void LaunchProject(Uri projectLocation)
@@ -26,6 +27,7 @@ namespace UnityMultiLauncher.ViewModels
 			if (exec != null)
 			{
 				System.Diagnostics.Process.Start(exec.LocalPath, string.Format("-projectpath {0}", projectLocation.LocalPath));
+				UpdateProperty(nameof(unityProjectLocations));
 			}
 			else
 			{
@@ -38,15 +40,25 @@ namespace UnityMultiLauncher.ViewModels
 		{
 			
 			var a = new OpenFileDialog();
+			a.Filter = "Executable Files (.exe)|*.exe|All Files (*.*)|*.*";
 			//a.Filter = "exe";
 			if ((bool)a.ShowDialog())
 			{
 				ProgramConfig.conf.unityExeLocations.Add(new Uri(a.FileName));
 				unityLocations.Add(new Uri(a.FileName));
-				ProgramConfig.conf.Save();
 				UpdateProperty(nameof(unityLocations));
+				ProgramConfig.conf.Save();
 			}
 			
+		}
+
+
+		protected void RemoveUnityVersion(object param)
+		{
+			ProgramConfig.conf.unityExeLocations.Remove(param as Uri);
+			unityLocations.Remove(param as Uri);
+			ProgramConfig.conf.Save();
+			UpdateProperty(nameof(unityLocations));
 		}
 
 		public ObservableCollection<Uri> unityLocations
@@ -57,25 +69,19 @@ namespace UnityMultiLauncher.ViewModels
 			}
 		}
 
-		public List<Tuple<Uri, string, string>> unityProjectLocations
+		public IEnumerable<Tuple<Uri, string, string>> unityProjectLocations
 		{
 			get
 			{
 				var unityKeys = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Unity Technologies\Unity Editor 5.x\", false);
 				var matchingKeys = unityKeys.GetValueNames().Where(key => key.Contains("RecentlyUsedProjectPaths"));
 				var pos = matchingKeys.Select(key => new Uri(Encoding.UTF8.GetString(unityKeys.GetValue(key) as byte[]).TrimEnd((char)0)));
-				ProgramConfig.conf.unityProjectLocations.AddRange(pos);
-				ProgramConfig.conf.unityProjectLocations = ProgramConfig.conf.unityProjectLocations.Distinct().ToList();
-				ProgramConfig.conf.Save();
 
-				var ret = new List<Tuple<Uri, string, string>>();
-				foreach (var project in ProgramConfig.conf.unityProjectLocations)
+				foreach (var project in pos)
 				{
 					var a = Util.UnityProjectVersion(project);
-					ret.Add(Tuple.Create(project, project.LocalPath.Substring(project.LocalPath.LastIndexOf('\\')+1), string.Format("{0}.{1}.{2}f{3}",a.Item1, a.Item2, a.Item3, a.Item4)));
+					yield return Tuple.Create(project, project.LocalPath.Substring(project.LocalPath.LastIndexOf('\\')+1), string.Format("{0}.{1}.{2}f{3}",a.Item1, a.Item2, a.Item3, a.Item4));
 				}
-
-				return ret;
 			}
 		}
 
@@ -102,6 +108,15 @@ namespace UnityMultiLauncher.ViewModels
 				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => AddUnityVersion(param)));
 			}
 		}
+
+		public ViewCommand removeUnityVersion
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => RemoveUnityVersion(param)));
+			}
+		}
+
 	}
 
 	public class unityLaunchers : ViewModel

@@ -93,6 +93,7 @@
     <Compile Include="Controls\Converters\DummyDebugConverter.cs" />
     <Compile Include="Controls\Converters\UnityProjectToUnityVersion.cs" />
     <Compile Include="Controls\Converters\UnityUriToUnityVersion.cs" />
+    <Compile Include="Controls\AlignableWrapPanel.cs" />
     <Compile Include="Models\ConfigLoader.cs" />
     <Compile Include="Models\ProgramConfig.cs" />
     <Compile Include="Models\Utility.cs" />

@@ -19,6 +19,7 @@ namespace UnityMultiLauncher
 					try
 					{
 						_conf = Utility.ConfigLoader.LoadConfig<ProgramConfig>(defaultFilename);
+						_conf.Save();
 					}
 					catch (Exception)
 					{
@@ -35,6 +36,6 @@ namespace UnityMultiLauncher
 		
 		public HashSet<Uri> unityExeLocations = new HashSet<Uri>();
 
-		public List<Uri> unityProjectLocations = new List<Uri>();
+		public string AccentColor = "Blue";
 	}
 }
