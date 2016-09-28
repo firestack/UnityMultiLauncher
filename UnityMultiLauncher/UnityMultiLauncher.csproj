@@ -97,6 +97,7 @@
     <Compile Include="Models\ConfigLoader.cs" />
     <Compile Include="Models\ProgramConfig.cs" />
     <Compile Include="Models\Utility.cs" />
+    <Compile Include="ViewModels\StyleViewModel.cs" />
     <Compile Include="ViewModels\UnityViewModel.cs" />
     <Compile Include="ViewModels\Utils\ViewCommand.cs" />
     <Compile Include="ViewModels\Utils\ViewModel.cs" />
@@ -108,6 +109,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\UtilViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

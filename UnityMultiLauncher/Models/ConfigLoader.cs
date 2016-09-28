@@ -35,7 +35,7 @@ namespace Utility
 
 		public static void SaveConfig(string relPath, object obj)
 		{
-			File.WriteAllText(relPath, JsonConvert.SerializeObject(obj));
+			File.WriteAllText(relPath, JsonConvert.SerializeObject(obj, Formatting.None, new JsonSerializerSettings { }));
 		}
 	}
 }

@@ -19,12 +19,9 @@ namespace UnityMultiLauncher
 
 			// get the current app style (theme and accent) from the application
 			// you can then use the current theme and custom accent instead set a new theme
-			Tuple<AppTheme, Accent> appStyle = ThemeManager.DetectAppStyle(Application.Current);
-
 			// now set the Green accent and dark theme
-			ThemeManager.ChangeAppStyle(Application.Current,
-										ThemeManager.GetAccent(ProgramConfig.conf.AccentColor),
-										ThemeManager.GetAppTheme("BaseLight")); // or appStyle.Item1
+			ThemeManager.ChangeAppStyle(Application.Current, ProgramConfig.conf.appStyle.Item2, ProgramConfig.conf.appStyle.Item1);
+
 
 			base.OnStartup(e);
 		}

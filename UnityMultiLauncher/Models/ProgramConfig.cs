@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows;
+using Newtonsoft.Json;
+using MahApps.Metro;
 
 namespace UnityMultiLauncher
 {
@@ -33,9 +35,27 @@ namespace UnityMultiLauncher
 
 		public static string defaultFilename { get { return string.Format("unitymultilauncher.{0}.cfg.json", Environment.UserName); } }
 
-		
-		public HashSet<Uri> unityExeLocations = new HashSet<Uri>();
+		[JsonIgnore]
+		public Tuple<AppTheme, Accent> appStyle
+		{
+			get
+			{
+				return Tuple.Create(
+					ThemeManager.AppThemes.First(theme => theme.Name == appTheme), 
+					ThemeManager.Accents.First(accent => accent.Name == appAccent)
+				);
+			}
+			set
+			{
+				appTheme = value.Item1.Name;
+				appAccent = value.Item2.Name;
+			}
+		}
 
-		public string AccentColor = "Blue";
+		public string appTheme = "BaseLight";
+
+		public string appAccent = "Blue";
+
+		public HashSet<Uri> unityExeLocations = new HashSet<Uri>();
 	}
 }

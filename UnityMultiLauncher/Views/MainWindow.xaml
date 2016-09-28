@@ -11,14 +11,31 @@
 		Width="800" >
 	<Controls:MetroWindow.Resources>
 		<VM:UnityViewModel x:Key="unity"/>
+		<VM:UtilViewModel x:Key="util"/>
+		<VM:StyleViewModel x:Key="stylevm"></VM:StyleViewModel>
 		<Converter:UnityUriToUnityVersion x:Key="uriToVersion"/>
 	</Controls:MetroWindow.Resources>
 
 	<Controls:MetroWindow.RightWindowCommands>
 		<Controls:WindowCommands>
 			<Button Content="Add Unity Executable" Command="{Binding addUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
+			<Button Content="Settings" Command="{Binding Source={StaticResource util}, Path=OpenFlyout}" CommandParameter="{Binding ElementName=SettingsFlyout, Mode=OneWay}"></Button>
 		</Controls:WindowCommands>
 	</Controls:MetroWindow.RightWindowCommands>
+
+	<Controls:MetroWindow.Flyouts>
+		<Controls:FlyoutsControl>
+			<Controls:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" IsOpen="False" HorizontalAlignment="Left" Margin="0" Padding="10,70,50,0" >
+				<StackPanel>
+					<Label>App Theme</Label>
+					<ComboBox ItemsSource="{Binding appTheme, Source={StaticResource stylevm}}" SelectedIndex="{Binding appThemeSelected, Source={StaticResource stylevm}}" ></ComboBox>
+					<Label>App Accent</Label>
+					<ComboBox ItemsSource="{Binding appAccent, Source={StaticResource stylevm}}" SelectedIndex="{Binding appAccentSelected, Source={StaticResource stylevm}}" ></ComboBox>
+				</StackPanel>
+
+			</Controls:Flyout>
+		</Controls:FlyoutsControl>
+	</Controls:MetroWindow.Flyouts>
 
 	<Grid>
 		<Grid.RowDefinitions>
