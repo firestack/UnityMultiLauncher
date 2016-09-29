@@ -48,13 +48,19 @@ namespace UnityMultiLauncher
 		{
 			foreach (var exe in ProgramConfig.conf.unityExeLocations)
 			{
-				var a = FileVersionInfo.GetVersionInfo(exe.AbsolutePath);
+				var a = FileVersionInfo.GetVersionInfo(exe.LocalPath);
 				if(a.ProductMajorPart == version.Item1 && a.ProductMinorPart == version.Item2 && a.ProductBuildPart == version.Item3)
 				{
 					return exe;
 				}
 			}
 			return null;
+		}
+
+		public static Tuple<int, int, int, int> GetUnityVersionFromExecutable(Uri exec)
+		{
+			var versionInfo = FileVersionInfo.GetVersionInfo(exec.LocalPath);
+			return Tuple.Create(versionInfo.ProductMajorPart, versionInfo.ProductMinorPart, versionInfo.ProductBuildPart, 0);
 		}
 	}
 }
