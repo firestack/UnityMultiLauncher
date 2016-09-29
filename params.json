@@ -1,0 +1,6 @@
+{
+  "name": "Unity Multi Launcher",
+  "tagline": "",
+  "body": "[![GitHub release](https://img.shields.io/github/release/firestack/UnityMultiLauncher.svg)](https://github.com/firestack/UnityMultiLauncher/releases/latest)\r\n\r\n# Unity Multi Launcher\r\nIt's currently in development and not finished, I don't know how much time I\r\ncan put into it at the moment.\r\n\r\nIf you do use my code or this program please let me know!\r\nI'd like to know how I can improve it or hear about any\r\nbugs people may encounter.\r\n\r\n## Current restrictions\r\n - Windows Only\r\n\t - Windows Registry Dependency (Unity Project Lookup)\r\n\t - WPF GUI Dependency\r\n - Can't find all instances of unity autonomously\r\n \t- In Windows when you install multiple versions of unity\r\n\t  it only puts the latest one into your Registry and\r\n\t  program files\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
