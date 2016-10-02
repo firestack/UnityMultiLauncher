@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using UnityMultiLauncher.ViewModels.Utils;
 using Microsoft.Win32;
 using MahApps.Metro.Controls;
@@ -56,13 +56,19 @@ namespace UnityMultiLauncher.ViewModels
 			}
 			else
 			{
+				var dialogSettings = new MetroDialogSettings { AnimateHide = false };
 				MainWindow.cwin.ShowMessageAsync(
-					"Unity Not Found", 
-					string.Format("The Unity Version For This Project Is Not Installed \n({0})", 
-						string.Format("Unity {0}.{1}.{2}", projectVersion.Item1, projectVersion.Item2, projectVersion.Item3))
+					"Unity Not Found",
+					string.Format("The Unity Version For This Project Is Not Installed \n({0})",
+					string.Format("Unity {0}.{1}.{2}", projectVersion.Item1, projectVersion.Item2, projectVersion.Item3)),
+					MessageDialogStyle.Affirmative,
+					dialogSettings
+				).ContinueWith(
+					// This makes the screen oddly flash (This could either be the thread switch or the animate show affecting it oddly
+					(a) => Application.Current.Dispatcher.Invoke(() => SelectUnityVersionDialog(projectLocation, new MetroDialogSettings { AnimateShow = false}))
 				);
 			}
-			if(unityExe == null)
+			if (unityExe == null)
 			{
 				selectedVersion = null;
 				selectedProject = null;
@@ -77,10 +83,10 @@ namespace UnityMultiLauncher.ViewModels
 			UpdateProperty(nameof(unityLocations));
 		}
 
-		protected void SelectUnityVersionDialog(Uri project)
+		protected void SelectUnityVersionDialog(Uri project, MetroDialogSettings dialogSettings = null)
 		{
 			var cd = MainWindow.cwin.TryFindResource("CustomLaunchDialog");
-			MainWindow.cwin.ShowMetroDialogAsync(cd as CustomDialog);
+			MainWindow.cwin.ShowMetroDialogAsync(cd as CustomDialog, dialogSettings);
 			selectedProject = project;
 			selectedVersion = Util.GetUnityExecutableFromVersion(Util.UnityProjectVersion(project));
 		}
@@ -167,7 +173,7 @@ namespace UnityMultiLauncher.ViewModels
 		{
 			get
 			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => LaunchProject(selectedProject, selectedVersion)));
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => { LaunchProject(selectedProject, selectedVersion); UtilViewModel.HideDialogFunc(param); }));
 			}
 		}
 

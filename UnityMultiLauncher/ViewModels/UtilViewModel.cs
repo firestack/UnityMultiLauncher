@@ -10,7 +10,7 @@ namespace UnityMultiLauncher.ViewModels
 {
 	public class UtilViewModel : Utils.ViewModel
 	{
-		protected void ToggleFlyout(object param)
+		public static void ToggleFlyout(object param)
 		{
 			if (param is MahApps.Metro.Controls.Flyout)
 			{
@@ -20,12 +20,12 @@ namespace UnityMultiLauncher.ViewModels
 
 		}
 
-		protected void OpenDialogFunc(object cd)
+		public static void OpenDialogFunc(object cd)
 		{
 			MainWindow.cwin.ShowMetroDialogAsync(cd as CustomDialog);
 		}
 
-		protected void HideDialogFunc(object cd)
+		public static void HideDialogFunc(object cd)
 		{
 			MainWindow.cwin.HideMetroDialogAsync(cd as CustomDialog);
 		}

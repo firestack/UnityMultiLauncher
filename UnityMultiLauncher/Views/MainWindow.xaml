@@ -12,9 +12,10 @@
 		Width="800" >
 
 	<Controls:MetroWindow.Resources>
-		
+
+	
 		<VM:UnityViewModel x:Key="unity"/>
-		
+
 		<VM:UtilViewModel x:Key="util"/>
 
 		<VM:StyleViewModel x:Key="stylevm" />
@@ -31,24 +32,27 @@
 					<RowDefinition/>
 					<RowDefinition/>
 					<RowDefinition/>
+					<RowDefinition/>
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition/>
-					<ColumnDefinition/>
-					<ColumnDefinition/>
-					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<TextBlock 
-					Foreground="{DynamicResource AccentColorBrush}"
                     TextWrapping="Wrap"
-					Grid.ColumnSpan="4" 
+					FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType=Dialog:MessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Dialog:MessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
 					Text="{Binding selectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat='Select Unity Version to Open Project &quot;\{0\}&quot; With'}" 
 				/>
+				<TextBlock Grid.Row="1" HorizontalAlignment="Center"
+						   FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType=Dialog:MessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Dialog:MessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}">
+					THIS WILL CHANGE YOUR PROJECTS VERSION
+				</TextBlock>
+
 				<ComboBox 
 					ItemsSource="{Binding unityLocations, Source={StaticResource unity}}" 
 					SelectedItem="{Binding selectedVersion, Source={StaticResource unity}}"
-					Grid.Row="1" 
-					Grid.ColumnSpan="4" 
+					Grid.Row="2" 
 				>
 					<ComboBox.ItemTemplate>
 						<DataTemplate>
@@ -56,28 +60,34 @@
 						</DataTemplate>
 					</ComboBox.ItemTemplate>
 				</ComboBox>
-				<Button 
-					Style="{StaticResource AccentedSquareButtonStyle}"
-					Content="Launch" 
-					Command="{Binding launchUnityProjectWithVersion, Mode=OneWay, Source={StaticResource unity}}" 
-					BorderThickness="0"
-					Margin="2"
-					Grid.Row="2" 
-					Grid.Column="2" 
-				/>
-				<Button 
-					Style="{StaticResource AccentedSquareButtonStyle}"
-					Content="Cancel"
-					Command="{Binding HideDialog, Mode=OneWay, Source={StaticResource util}}"
-					CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}" 
-					BorderThickness="0"
-					Margin="2"
-					Grid.Row="2" 
-					Grid.Column="3" 
-				/>
+				<StackPanel 
+					Grid.Row="3"
+                    Height="85"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+					<Button 
+						Style="{DynamicResource AccentedDialogSquareButton}"
+						Content="Launch" 
+						Command="{Binding launchUnityProjectWithVersion, Mode=OneWay, Source={StaticResource unity}}" 
+						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}" 
+						Height="35"
+						MinWidth="80"
+						Margin="0 0 5 0"
+					/>
+					<Button
+						Style="{DynamicResource AccentedDialogSquareButton}"
+						Content="Cancel"
+						Command="{Binding HideDialog, Mode=OneWay, Source={StaticResource util}}"
+						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}" 
+						Height="35"
+						MinWidth="80"
+						Margin="0 0 5 0"
+					/>
+				</StackPanel>
+
 			</Grid>
 		</Dialog:CustomDialog>
-		
+
 	</Controls:MetroWindow.Resources>
 
 	<Controls:MetroWindow.RightWindowCommands>
