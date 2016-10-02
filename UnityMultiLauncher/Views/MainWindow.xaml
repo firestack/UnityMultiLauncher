@@ -25,7 +25,7 @@
 
 		<Converter:NumberToGoldenRatio x:Key="numberToGold" />
 
-		<Dialog:CustomDialog x:Key="CustomLaunchDialog" Title="Launch Project">
+		<Dialog:CustomDialog x:Key="CustomLaunchDialog" Title="Open Project With Version">
 			<Grid>
 				<Grid.RowDefinitions>
 					<RowDefinition/>
@@ -42,7 +42,7 @@
 					Foreground="{DynamicResource AccentColorBrush}"
                     TextWrapping="Wrap"
 					Grid.ColumnSpan="4" 
-					Text="{Binding selectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat='Select Unity Version to Force Launch Project &quot;\{0\}&quot; With'}" 
+					Text="{Binding selectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat='Select Unity Version to Open Project &quot;\{0\}&quot; With'}" 
 				/>
 				<ComboBox 
 					ItemsSource="{Binding unityLocations, Source={StaticResource unity}}" 
