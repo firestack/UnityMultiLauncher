@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Data;
 using System.Globalization;
@@ -10,9 +12,27 @@ namespace UnityMultiLauncher.Controls.Converters
 
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			var unity = value as Uri;
-			var versionInfo =  FileVersionInfo.GetVersionInfo(unity.LocalPath);
-			return string.Format("Unity v{0}.{1}.{2}", versionInfo.ProductMajorPart, versionInfo.ProductMinorPart, versionInfo.ProductBuildPart);
+			if(value is IEnumerable<Uri>)
+			{
+				var convertedUris = new List<string>();
+				foreach(var a in value as IEnumerable<Uri>)
+				{
+					convertedUris.Add('v' + ConvertInternal(a));
+
+				}
+				return convertedUris;
+			}
+			if (value is Uri)
+			{
+				return 'v' + ConvertInternal(value as Uri);
+			}
+			return "";
+		}
+
+		public string ConvertInternal(Uri unity)
+		{
+			var versionInfo = Util.GetUnityVersionFromExecutable(unity);
+			return string.Format("{0}.{1}.{2}", versionInfo.Item1, versionInfo.Item2, versionInfo.Item3);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
