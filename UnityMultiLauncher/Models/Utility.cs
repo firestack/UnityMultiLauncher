@@ -37,11 +37,14 @@ namespace UnityMultiLauncher
 		public static Tuple<int, int, int, int> UnityProjectVersion(Uri project)
 		{
 			var filename = System.IO.Path.Combine(project.LocalPath, @"ProjectSettings /ProjectVersion.txt");
-			var data = System.IO.File.ReadAllText(filename, Encoding.UTF8);
-			var match = versionExp.Match(data);
+			if (System.IO.File.Exists(filename))
+			{
+				var data = System.IO.File.ReadAllText(filename, Encoding.UTF8);
+				var match = versionExp.Match(data);
 
-
-			return Tuple.Create(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[4].Value));
+				return Tuple.Create(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[4].Value));
+			}
+			return null;
 		}
 
 		public static Uri GetUnityExecutableFromVersion(Tuple<int, int, int, int> version)

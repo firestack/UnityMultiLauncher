@@ -1,0 +1,42 @@
+﻿<UserControl x:Class="UnityMultiLauncher.Controls.BaseFilesystemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
+		
+		<!--Grid Content-->
+		<!--PWD-->
+		<ItemsControl Grid.ColumnSpan="2">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal"></StackPanel>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			
+		</ItemsControl>
+		
+		<!--Favorites Bar-->
+		
+		<!--File Browser-->
+		
+		<!--Button Bar-->
+		<ItemsControl >
+			
+		</ItemsControl>
+		
+		
+		
+	</Grid>
+</UserControl>

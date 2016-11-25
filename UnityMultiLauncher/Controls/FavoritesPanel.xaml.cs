@@ -11,26 +11,19 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Linq;
 using System.Windows.Shapes;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
 
-namespace UnityMultiLauncher
+namespace UnityMultiLauncher.Controls
 {
 	/// <summary>
-	/// Interaction logic for MainWindow.xaml
+	/// Interaction logic for FavoritesPanel.xaml
 	/// </summary>
-	public partial class MainWindow : MetroWindow
+	public partial class FavoritesPanel : UserControl
 	{
-		public static MainWindow cwin;
-
-		public MainWindow()
+		public FavoritesPanel()
 		{
-			cwin = this;
 			InitializeComponent();
-
-			var a = Environment.SpecialFolder.MyComputer.GetLocation();
+			
 		}
 	}
 }

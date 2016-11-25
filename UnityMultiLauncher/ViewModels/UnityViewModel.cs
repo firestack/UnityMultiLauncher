@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows;
 using UnityMultiLauncher.ViewModels.Utils;
 using Microsoft.Win32;
+using System.Windows.Forms;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using System.Windows.Controls;
@@ -14,6 +15,8 @@ namespace UnityMultiLauncher.ViewModels
 {
 	public class UnityViewModel : ViewModel
 	{
+		protected List<Uri> extraProjectLoctions = new List<Uri>();
+
 		protected void LaunchUnityVersion(Uri unityExe)
 		{
 
@@ -23,11 +26,10 @@ namespace UnityMultiLauncher.ViewModels
 
 		protected void AddUnityVersion(object param)
 		{
-
-			var a = new OpenFileDialog();
-			a.Filter = "Executable Files (.exe)|*.exe|All Files (*.*)|*.*";
+			var a = new System.Windows.Forms.OpenFileDialog();
+			a.Filter = "Programs (.exe)|*.exe|All Files (*.*)|*.*";
 			//a.Filter = "exe";
-			if ((bool)a.ShowDialog())
+			if (a.ShowDialog() == DialogResult.OK)
 			{
 				ProgramConfig.conf.unityExeLocations.Add(new Uri(a.FileName));
 				unityLocations.Add(new Uri(a.FileName));
@@ -64,14 +66,25 @@ namespace UnityMultiLauncher.ViewModels
 					MessageDialogStyle.Affirmative,
 					dialogSettings
 				).ContinueWith(
-					// This makes the screen oddly flash (This could either be the thread switch or the animate show affecting it oddly
-					(a) => Application.Current.Dispatcher.Invoke(() => SelectUnityVersionDialog(projectLocation, new MetroDialogSettings { AnimateShow = false}))
+					// HACK: This makes the screen oddly flash (This could either be the thread switch or the animate show affecting it oddly
+					(a) => System.Windows.Application.Current.Dispatcher.Invoke(() => SelectUnityVersionDialog(projectLocation, new MetroDialogSettings { AnimateShow = false}))
 				);
 			}
 			if (unityExe == null)
 			{
 				selectedVersion = null;
 				selectedProject = null;
+			}
+		}
+
+		protected void AddUnityProject()
+		{
+			var a = new FolderBrowserDialog();
+			
+			if (a.ShowDialog() == DialogResult.OK)
+			{
+				extraProjectLoctions.Add(new Uri(a.SelectedPath));
+				UpdateProperty(nameof(unityProjectLocations));
 			}
 		}
 
@@ -103,7 +116,6 @@ namespace UnityMultiLauncher.ViewModels
 		{
 			get
 			{
-
 #if EXAMPLE_VIEW
 				var rng = new Random();
 				foreach(var idx in Enumerable.Range(0,10))
@@ -115,14 +127,27 @@ namespace UnityMultiLauncher.ViewModels
 					yield return Tuple.Create(testUri, testUri.LocalPath.Substring(testUri.LocalPath.LastIndexOf('\\') + 1), string.Format("{0}.{1}.{2}f{3}", rngExeVersion.Item1, rngExeVersion.Item2, rngExeVersion.Item3, rngExeVersion.Item4));
 				}			
 #else
-
 				var unityKeys = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Unity Technologies\Unity Editor 5.x\", false);
 				var matchingKeys = unityKeys.GetValueNames().Where(key => key.Contains("RecentlyUsedProjectPaths"));
+
 				var pos = matchingKeys.Select(key => new Uri(Encoding.UTF8.GetString(unityKeys.GetValue(key) as byte[]).TrimEnd((char)0)));
-				foreach (var project in pos)
+				foreach (var project in extraProjectLoctions.Concat(pos) )
 				{
-					var a = Util.UnityProjectVersion(project);
-					yield return Tuple.Create(project, project.LocalPath.Substring(project.LocalPath.LastIndexOf('\\') + 1), string.Format("{0}.{1}.{2}f{3}", a.Item1, a.Item2, a.Item3, a.Item4));
+					if (System.IO.Directory.Exists(project.LocalPath) && System.IO.Directory.Exists(System.IO.Path.Combine(project.LocalPath, "Assets")))
+					{
+						var projectVersion = Util.UnityProjectVersion(project);
+						if(projectVersion != null)
+							yield return Tuple.Create(
+								project, 
+								project.LocalPath.Substring(project.LocalPath.LastIndexOf('\\') + 1), 
+								string.Format("{0}.{1}.{2}f{3}", 
+									projectVersion.Item1, 
+									projectVersion.Item2, 
+									projectVersion.Item3, 
+									projectVersion.Item4
+								)
+							);
+					}
 				}
 #endif
 
@@ -166,6 +191,14 @@ namespace UnityMultiLauncher.ViewModels
 			get
 			{
 				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => LaunchProject(param as Uri)));
+			}
+		}
+
+		public ViewCommand addUnityProject
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => AddUnityProject()));
 			}
 		}
 
