@@ -9,7 +9,7 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" x:Name="metroWindow" x:Class="UnityMultiLauncher.MainWindow"
 		Title="Unity Multi Launcher"
 		Height="600"
-		Width="800" >
+		Width="800" WindowButtonCommandsOverlayBehavior="Never" RightWindowCommandsOverlayBehavior="Never" >
 
 	<Controls:MetroWindow.Resources>
 
@@ -98,7 +98,7 @@
 	<Controls:MetroWindow.Flyouts>
 		<Controls:FlyoutsControl>
 			<Controls:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" IsOpen="False" HorizontalAlignment="Left" Margin="0" Padding="10,70,50,0" >
-				<StackPanel>
+				<StackPanel Width="240">
 					<Label Content="App Theme"/>
 					<ComboBox ItemsSource="{Binding appTheme, Source={StaticResource stylevm}}" SelectedIndex="{Binding appThemeSelected, Source={StaticResource stylevm}}" />
 					<Label Content="App Accent"/>

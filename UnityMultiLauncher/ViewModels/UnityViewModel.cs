@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using UnityMultiLauncher.ViewModels.Utils;
 using Microsoft.Win32;
 using System.Windows.Forms;
-using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using System.Windows.Controls;
 using System.Collections.ObjectModel;
 
 namespace UnityMultiLauncher.ViewModels
