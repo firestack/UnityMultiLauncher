@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using System.Windows.Forms;
 using MahApps.Metro.Controls.Dialogs;
 using System.Collections.ObjectModel;
+using System.Windows.Data;
 
 namespace UnityMultiLauncher.ViewModels
 {
@@ -106,6 +107,43 @@ namespace UnityMultiLauncher.ViewModels
 			get
 			{
 				return GetProperty() as ObservableCollection<Uri> ?? SetProperty(new ObservableCollection<Uri>(ProgramConfig.conf.unityExeLocations));
+			}
+		}
+
+		public System.ComponentModel.ICollectionView UnityLocationsSorted
+		{
+			get
+			{
+				ListCollectionView prop = GetProperty() as ListCollectionView;
+				if (prop == null)
+				{
+					var p = CollectionViewSource.GetDefaultView((IList<Uri>)unityLocations) as ListCollectionView;
+					prop = SetProperty(p as ListCollectionView);
+					prop.CustomSort = Comparer<Uri>.Create(
+						(A, B) => 
+						{
+							var ae = Util.GetUnityVersionFromExecutable(A);
+							var be = Util.GetUnityVersionFromExecutable(B);
+
+							var compare = ae.Item1 - be.Item1;
+							if(compare == 0) 
+							{
+								compare = ae.Item2 - be.Item2;
+								if (compare == 0)
+								{
+									compare = ae.Item3 - be.Item3;
+								}
+							}
+							
+							return -compare;
+						}
+					);
+					prop.IsLiveSorting = true;
+
+				}
+
+				return prop;
+
 			}
 		}
 

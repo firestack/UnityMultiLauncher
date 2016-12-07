@@ -121,7 +121,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 		<Label Content="Launch Unity" HorizontalAlignment="Center" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
-		<ItemsControl ItemsSource="{Binding unityLocations, Source={StaticResource unity}}" Grid.Row="1" Grid.ColumnSpan="2" >
+		<ItemsControl ItemsSource="{Binding UnityLocationsSorted, Source={StaticResource unity}}" Grid.Row="1" Grid.ColumnSpan="2" >
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
 					<Button 
