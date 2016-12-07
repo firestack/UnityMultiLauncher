@@ -110,6 +110,7 @@
     <Compile Include="Models\ProgramConfig.cs" />
     <Compile Include="Models\Utility.cs" />
     <Compile Include="Util\ExtentionMethods.cs" />
+    <Compile Include="ViewModels\ErrorViewModel.cs" />
     <Compile Include="ViewModels\StyleViewModel.cs" />
     <Compile Include="ViewModels\UnityViewModel.cs" />
     <Compile Include="ViewModels\Utils\ViewCommand.cs" />
@@ -119,6 +120,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\BaseFilesystemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -133,6 +138,9 @@
     <Compile Include="ViewModels\UtilViewModel.cs" />
     <Compile Include="Controls\BaseFilesystemControl.xaml.cs">
       <DependentUpon>BaseFilesystemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ErrorWindow.xaml.cs">
+      <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

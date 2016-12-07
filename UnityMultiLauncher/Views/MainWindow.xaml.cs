@@ -14,8 +14,8 @@ namespace UnityMultiLauncher
 		{
 			cwin = this;
 			InitializeComponent();
-
-			var a = Environment.SpecialFolder.MyComputer.GetLocation();
+			
+			//var a = Environment.SpecialFolder.MyComputer.GetLocation();
 		}
 	}
 }

@@ -1,15 +1,20 @@
 ﻿<Controls:MetroWindow
-		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-		xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-		xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-		xmlns:UMControls="clr-namespace:UnityMultiLauncher.Controls"
-		xmlns:VM="clr-namespace:UnityMultiLauncher.ViewModels"
-		xmlns:Converter="clr-namespace:UnityMultiLauncher.Controls.Converters"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" x:Name="metroWindow" x:Class="UnityMultiLauncher.MainWindow"
-		Title="Unity Multi Launcher"
-		Height="600"
-		Width="800" WindowButtonCommandsOverlayBehavior="Never" RightWindowCommandsOverlayBehavior="Never" >
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+	xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+	xmlns:UMControls="clr-namespace:UnityMultiLauncher.Controls"
+	xmlns:VM="clr-namespace:UnityMultiLauncher.ViewModels"
+	xmlns:Converter="clr-namespace:UnityMultiLauncher.Controls.Converters"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:System="clr-namespace:System;assembly=mscorlib"
+	mc:Ignorable="d" 
+	x:Name="metroWindow" 
+	x:Class="UnityMultiLauncher.MainWindow"
+	Title="Unity Multi Launcher"
+	Height="600"
+	Width="800" WindowButtonCommandsOverlayBehavior="Never" RightWindowCommandsOverlayBehavior="Never" >
 
 	<Controls:MetroWindow.Resources>
 

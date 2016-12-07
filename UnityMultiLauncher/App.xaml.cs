@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System;
 using MahApps.Metro;
 
 namespace UnityMultiLauncher
@@ -16,8 +17,27 @@ namespace UnityMultiLauncher
 			// now set the Green accent and dark theme
 			ThemeManager.ChangeAppStyle(Application.Current, ProgramConfig.conf.appStyle.Item2, ProgramConfig.conf.appStyle.Item1);
 
+			Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
 			base.OnStartup(e);
+		}
+
+		private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+		{
+			System.TimeSpan timeDifference = DateTime.UtcNow -
+				new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+			long unixEpochTime = System.Convert.ToInt64(timeDifference.TotalSeconds);
+
+			var filePath = @"Crashes/log." + unixEpochTime.ToString() + ".txt";
+			System.IO.FileInfo file = new System.IO.FileInfo(filePath);
+			file.Directory.Create();
+			System.IO.File.WriteAllText(file.FullName, e.Exception.ToString());
+
+			var Win = new Views.ErrorWindow();
+			Win.EVMP.Exception = e.Exception;
+			
+			Win.metroWindow.ShowDialog();
+
 		}
 	}
 }
