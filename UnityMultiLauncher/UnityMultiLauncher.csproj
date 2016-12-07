@@ -68,16 +68,17 @@
       <HintPath>..\packages\MahApps.Metro.1.3.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MahApps.Metro.IconPacks, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.1.1.0\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.3.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -102,13 +103,25 @@
     <Compile Include="Controls\Converters\UnityProjectToUnityVersion.cs" />
     <Compile Include="Controls\Converters\UnityUriToUnityVersion.cs" />
     <Compile Include="Controls\AlignableWrapPanel.cs" />
+    <Compile Include="Controls\FavoritesPanel.xaml.cs">
+      <DependentUpon>FavoritesPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\ConfigLoader.cs" />
     <Compile Include="Models\ProgramConfig.cs" />
     <Compile Include="Models\Utility.cs" />
+    <Compile Include="Util\ExtentionMethods.cs" />
     <Compile Include="ViewModels\StyleViewModel.cs" />
     <Compile Include="ViewModels\UnityViewModel.cs" />
     <Compile Include="ViewModels\Utils\ViewCommand.cs" />
     <Compile Include="ViewModels\Utils\ViewModel.cs" />
+    <Page Include="Controls\FavoritesPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BaseFilesystemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -118,6 +131,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModels\UtilViewModel.cs" />
+    <Compile Include="Controls\BaseFilesystemControl.xaml.cs">
+      <DependentUpon>BaseFilesystemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -179,6 +195,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

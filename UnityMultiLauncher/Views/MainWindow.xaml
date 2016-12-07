@@ -6,14 +6,14 @@
 		xmlns:UMControls="clr-namespace:UnityMultiLauncher.Controls"
 		xmlns:VM="clr-namespace:UnityMultiLauncher.ViewModels"
 		xmlns:Converter="clr-namespace:UnityMultiLauncher.Controls.Converters"
-		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Name="metroWindow" x:Class="UnityMultiLauncher.MainWindow"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" x:Name="metroWindow" x:Class="UnityMultiLauncher.MainWindow"
 		Title="Unity Multi Launcher"
 		Height="600"
-		Width="800" >
+		Width="800" WindowButtonCommandsOverlayBehavior="Never" RightWindowCommandsOverlayBehavior="Never" >
 
 	<Controls:MetroWindow.Resources>
 
-	
+
 		<VM:UnityViewModel x:Key="unity"/>
 
 		<VM:UtilViewModel x:Key="util"/>
@@ -39,15 +39,13 @@
 				</Grid.ColumnDefinitions>
 				<TextBlock 
                     TextWrapping="Wrap"
-					FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType=Dialog:MessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Dialog:MessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-					Text="{Binding selectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat='Select Unity Version to Open Project &quot;\{0\}&quot; With'}" 
+					FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+					Text="{Binding selectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat=Select Unity Version to Open Project \&quot;\{0\}\&quot; With}" 
 				/>
 				<TextBlock Grid.Row="1" HorizontalAlignment="Center"
-						   FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType=Dialog:MessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Dialog:MessageDialog, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}">
-					THIS WILL CHANGE YOUR PROJECTS VERSION
-				</TextBlock>
+						   FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"><Run Text="THIS WILL CHANGE YOUR PROJECTS VERSION"/></TextBlock>
 
 				<ComboBox 
 					ItemsSource="{Binding unityLocations, Source={StaticResource unity}}" 
@@ -93,18 +91,18 @@
 	<Controls:MetroWindow.RightWindowCommands>
 		<Controls:WindowCommands>
 			<Button Content="Add Unity Executable" Command="{Binding addUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
-			<Button Content="Settings" Command="{Binding Source={StaticResource util}, Path=OpenFlyout}" CommandParameter="{Binding ElementName=SettingsFlyout, Mode=OneWay}"></Button>
+			<Button Content="Settings" Command="{Binding OpenFlyout, Source={StaticResource util}}" CommandParameter="{Binding ElementName=SettingsFlyout, Mode=OneWay}"/>
 		</Controls:WindowCommands>
 	</Controls:MetroWindow.RightWindowCommands>
 
 	<Controls:MetroWindow.Flyouts>
 		<Controls:FlyoutsControl>
 			<Controls:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" IsOpen="False" HorizontalAlignment="Left" Margin="0" Padding="10,70,50,0" >
-				<StackPanel>
-					<Label>App Theme</Label>
-					<ComboBox ItemsSource="{Binding appTheme, Source={StaticResource stylevm}}" SelectedIndex="{Binding appThemeSelected, Source={StaticResource stylevm}}" ></ComboBox>
-					<Label>App Accent</Label>
-					<ComboBox ItemsSource="{Binding appAccent, Source={StaticResource stylevm}}" SelectedIndex="{Binding appAccentSelected, Source={StaticResource stylevm}}" ></ComboBox>
+				<StackPanel Width="240">
+					<Label Content="App Theme"/>
+					<ComboBox ItemsSource="{Binding appTheme, Source={StaticResource stylevm}}" SelectedIndex="{Binding appThemeSelected, Source={StaticResource stylevm}}" />
+					<Label Content="App Accent"/>
+					<ComboBox ItemsSource="{Binding appAccent, Source={StaticResource stylevm}}" SelectedIndex="{Binding appAccentSelected, Source={StaticResource stylevm}}" />
 				</StackPanel>
 
 			</Controls:Flyout>
@@ -112,15 +110,18 @@
 	</Controls:MetroWindow.Flyouts>
 
 	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition/>
+		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" MinHeight="100"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-
-		<Label Content="Launch Unity" HorizontalAlignment="Center" VerticalAlignment="Bottom" VerticalContentAlignment="Center"/>
-		<ItemsControl ItemsSource="{Binding unityLocations, Source={StaticResource unity}}" Grid.Row="1" >
+		<Label Content="Launch Unity" HorizontalAlignment="Center" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
+		<ItemsControl ItemsSource="{Binding unityLocations, Source={StaticResource unity}}" Grid.Row="1" Grid.ColumnSpan="2" >
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
 					<Button 
@@ -159,7 +160,21 @@
 		</ItemsControl>
 
 		<Label x:Name="label" Content="Open Unity Project" HorizontalAlignment="Left" Margin="0" Grid.Row="2" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"/>
-		<ScrollViewer Grid.Row="3">
+		<Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Command="{Binding addUnityProject, Mode=OneWay, Source={StaticResource unity}}" Content="Add Project" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0" Padding="30,5">
+			<!--<StackPanel>
+				
+				<Rectangle Width="20"
+                   Height="20"
+                   Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+					<Rectangle.OpacityMask>
+
+						<VisualBrush Stretch="Fill" Visual="{DynamicResource Add}" />
+					</Rectangle.OpacityMask>
+				</Rectangle>
+				<TextBlock>Add</TextBlock>
+			</StackPanel>-->
+		</Button>
+		<ScrollViewer Grid.Row="3" Grid.ColumnSpan="2">
 			<ItemsControl Grid.Row="3" ItemsSource="{Binding unityProjectLocations, Source={StaticResource unity}}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
