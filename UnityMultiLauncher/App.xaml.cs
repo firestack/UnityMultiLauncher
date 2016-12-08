@@ -29,15 +29,16 @@ namespace UnityMultiLauncher
 			long unixEpochTime = System.Convert.ToInt64(timeDifference.TotalSeconds);
 
 			var filePath = @"Crashes/log." + unixEpochTime.ToString() + ".txt";
+
 			System.IO.FileInfo file = new System.IO.FileInfo(filePath);
-			file.Directory.Create();
-			System.IO.File.WriteAllText(file.FullName, e.Exception.ToString());
+			file.Directory.Create(); System.IO.File.WriteAllText(file.FullName, e.Exception.ToString());
 
-			var Win = new Views.ErrorWindow();
-			Win.EVMP.Exception = e.Exception;
+			var eWin = new Views.ErrorWindow();
 			
-			Win.metroWindow.ShowDialog();
+			eWin.EVMP.Exception = e.Exception;
+			eWin.EVMP.FileLocation = file;
 
+			eWin.metroWindow.ShowDialog();
 		}
 	}
 }

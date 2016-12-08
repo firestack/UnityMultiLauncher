@@ -21,18 +21,20 @@
 	<Controls:MetroWindow.RightWindowCommands>
 		<Controls:WindowCommands>
 			<Button Content="Open Github" Command="{Binding OpenGithub, Mode=OneWay, Source={StaticResource EVM}}" />
-			
+
 		</Controls:WindowCommands>
 	</Controls:MetroWindow.RightWindowCommands>
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="40*"/>
-			<RowDefinition Height="427*"/>
-			<RowDefinition Height="37*"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Label Content="Oops, an Exception occurred and forced UML to quit" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" FontFamily="Hack" FontSize="20"/>
-		<Label Content="{Binding FileLocation.FullName, Mode=OneWay, Source={StaticResource EVM}}" ></Label>
-		<TextBlock Grid.Row="1" Text="{Binding ExceptionString, Mode=OneWay, Source={StaticResource EVM}}" TextWrapping="Wrap" />
+		<ScrollViewer Grid.Row="1" >
+			<TextBlock Text="{Binding ExceptionString, Mode=OneWay, Source={StaticResource EVM}}" TextWrapping="Wrap" />
+		</ScrollViewer>
+		<Label Content="{Binding FileLocation.FullName, Mode=OneWay, Source={StaticResource EVM}}" Grid.Row="2" VerticalContentAlignment="Bottom" />
 
 	</Grid>
 </Controls:MetroWindow>
