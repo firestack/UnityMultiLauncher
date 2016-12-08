@@ -21,7 +21,7 @@
 	<Controls:MetroWindow.RightWindowCommands>
 		<Controls:WindowCommands>
 			<Button Content="Open Github" Command="{Binding OpenGithub, Mode=OneWay, Source={StaticResource EVM}}" />
-
+			<Button Content="Copy Error To Clipboard" Command=""/>
 		</Controls:WindowCommands>
 	</Controls:MetroWindow.RightWindowCommands>
 	<Grid>

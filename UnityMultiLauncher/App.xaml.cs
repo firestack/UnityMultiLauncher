@@ -35,7 +35,7 @@ namespace UnityMultiLauncher
 
 			var eWin = new Views.ErrorWindow();
 			
-			eWin.EVMP.Exception = e.Exception;
+			eWin.EVMP.EVMException = e.Exception;
 			eWin.EVMP.FileLocation = file;
 
 			eWin.metroWindow.ShowDialog();

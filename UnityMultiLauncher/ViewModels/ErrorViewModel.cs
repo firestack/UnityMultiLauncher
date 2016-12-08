@@ -9,7 +9,7 @@ namespace UnityMultiLauncher.ViewModels
 	using Utils;
 	public class ErrorViewModel : ViewModel
 	{
-		public System.Exception Exception
+		public System.Exception EVMException
 		{
 			get
 			{
@@ -26,7 +26,9 @@ namespace UnityMultiLauncher.ViewModels
 		{
 			get
 			{
-				return Exception.ToString();
+
+
+				return EVMException.FormatExceptionDataRecursive() + Environment.NewLine + EVMException.ToString() ;
 			}
 		}
 
@@ -58,6 +60,20 @@ namespace UnityMultiLauncher.ViewModels
 			get
 			{
 				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(OpenGithubFunc));
+			}
+		}
+
+		public void ExceptionToClipboardFunc(object obj)
+		{
+			System.Windows.Clipboard.SetText(ExceptionString);
+
+		}
+
+		public ViewCommand ExceptionToClipboard
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(ExceptionToClipboardFunc));
 			}
 		}
 

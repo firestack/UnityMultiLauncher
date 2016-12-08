@@ -7,7 +7,7 @@ namespace UnityMultiLauncher
 {
 	public static class Util
 	{
-		private static Regex versionExp = new Regex(@"(\d+).(\d+).(\d+)f(\d+)", RegexOptions.Compiled);
+		private static Regex versionExp = new Regex(@"(\d+)\.(\d+)\.(\d+)([A-z]+)(\d+)", RegexOptions.Compiled);
 
 		public static string UnityProjectSettings(Uri project, string key)
 		{
@@ -33,13 +33,21 @@ namespace UnityMultiLauncher
 
 		public static Tuple<int, int, int, int> UnityProjectVersion(Uri project)
 		{
-			var filename = System.IO.Path.Combine(project.LocalPath, @"ProjectSettings /ProjectVersion.txt");
+			var filename = System.IO.Path.Combine(project.LocalPath, @"ProjectSettings\ProjectVersion.txt");
 			if (System.IO.File.Exists(filename))
 			{
 				var data = System.IO.File.ReadAllText(filename, Encoding.UTF8);
 				var match = versionExp.Match(data);
-
-				return Tuple.Create(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[4].Value));
+				try
+				{
+					return Tuple.Create(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[5].Value));
+				}
+				catch (Exception E)
+				{
+					E.Data["ProjectText"] = data.ToString();
+					E.Data["Matches"] = match.ToString();
+					throw;
+				}
 			}
 			return null;
 		}

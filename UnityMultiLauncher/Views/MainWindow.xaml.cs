@@ -14,7 +14,7 @@ namespace UnityMultiLauncher
 		{
 			cwin = this;
 			InitializeComponent();
-			throw new NotImplementedException();
+			
 		}
 	}
 }
