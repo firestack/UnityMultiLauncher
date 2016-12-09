@@ -8,7 +8,7 @@ namespace UnityMultiLauncher.ViewModels.Utils
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 
-		protected void UpdateProperty(string Name)
+		protected void UpdateProperty([CallerMemberName] string Name = null)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(Name));
 		}

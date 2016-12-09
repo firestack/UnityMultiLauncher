@@ -54,5 +54,7 @@ namespace UnityMultiLauncher
 		public string appAccent = "Blue";
 
 		public HashSet<Uri> unityExeLocations = new HashSet<Uri>();
+
+		public bool ShouldUseUnitySubVersion = false;
 	}
 }

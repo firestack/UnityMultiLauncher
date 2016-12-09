@@ -70,5 +70,15 @@ namespace UnityMultiLauncher
 			var versionInfo = FileVersionInfo.GetVersionInfo(exec.LocalPath);
 			return Tuple.Create(versionInfo.ProductMajorPart, versionInfo.ProductMinorPart, versionInfo.ProductBuildPart, 0);
 		}
+
+		public static void DumpUnityVersionInfo(Uri exec)
+		{
+			var versionInfo = FileVersionInfo.GetVersionInfo(exec.LocalPath);
+			System.Threading.Tasks.Task.Run(() => Newtonsoft.Json.JsonConvert.SerializeObject(versionInfo)).ContinueWith((input) => {
+				System.IO.File.WriteAllText(versionInfo.ProductName + "_" + versionInfo.ProductVersion + ".json", input.Result);
+				
+			})
+
+;		}
 	}
 }

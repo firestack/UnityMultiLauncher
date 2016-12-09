@@ -19,6 +19,9 @@
 	<Controls:MetroWindow.Resources>
 
 
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+
 		<VM:UnityViewModel x:Key="unity"/>
 
 		<VM:UtilViewModel x:Key="util"/>
@@ -108,6 +111,8 @@
 					<ComboBox ItemsSource="{Binding appTheme, Source={StaticResource stylevm}}" SelectedIndex="{Binding appThemeSelected, Source={StaticResource stylevm}}" />
 					<Label Content="App Accent"/>
 					<ComboBox ItemsSource="{Binding appAccent, Source={StaticResource stylevm}}" SelectedIndex="{Binding appAccentSelected, Source={StaticResource stylevm}}" />
+					<Label Content="Should Use Unity Release Sub Versions"/>
+					<CheckBox IsChecked="{Binding UseUnitySubVersion, Source={StaticResource unity}}" />
 				</StackPanel>
 
 			</Controls:Flyout>
@@ -147,6 +152,12 @@
 									Command="{Binding removeUnityVersion, Source={StaticResource unity}}" 
 									CommandParameter="{Binding Mode=OneWay}"
 								/>
+								<MenuItem 
+									Header="Dump Unity Info (Send to devs)"
+									Command="{Binding DumpUnityExeInfo, Mode=OneWay, Source={StaticResource unity}}"
+									CommandParameter="{Binding}"
+									Visibility="{Binding UseUnitySubVersion, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource unity}}"
+									/>
 							</ContextMenu>
 						</Button.ContextMenu>
 						<StackPanel>

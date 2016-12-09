@@ -31,7 +31,7 @@ namespace UnityMultiLauncher.Controls.Converters
 		public string ConvertInternal(Uri unity)
 		{
 			var versionInfo = Util.GetUnityVersionFromExecutable(unity);
-			return string.Format("{0}.{1}.{2}", versionInfo.Item1, versionInfo.Item2, versionInfo.Item3);
+			return "{0}.{1}.{2}".Format( versionInfo.Item1, versionInfo.Item2, versionInfo.Item3);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

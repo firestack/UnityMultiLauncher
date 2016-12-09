@@ -213,6 +213,8 @@ namespace UnityMultiLauncher.ViewModels
 			}
 		}
 
+		public bool SupportUnitySubversion { get; set; }
+
 		public ViewCommand launchUnity
 		{
 			get
@@ -274,6 +276,33 @@ namespace UnityMultiLauncher.ViewModels
 			get
 			{
 				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => SelectUnityVersionDialog(param as Uri)));
+			}
+		}
+
+		public bool UseUnitySubVersion
+		{
+			get
+			{
+				return ProgramConfig.conf.ShouldUseUnitySubVersion;
+			}
+			set
+			{
+				ProgramConfig.conf.ShouldUseUnitySubVersion = value;
+				ProgramConfig.conf.Save();
+				UpdateProperty();
+			}
+		}
+
+		public void DumpUnityExeInfoFunc(object uri)
+		{
+			Util.DumpUnityVersionInfo(uri as Uri);
+		}
+
+		public ViewCommand DumpUnityExeInfo
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(DumpUnityExeInfoFunc));
 			}
 		}
 	}
