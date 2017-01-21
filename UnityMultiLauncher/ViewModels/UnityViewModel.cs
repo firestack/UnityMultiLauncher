@@ -24,6 +24,8 @@ namespace UnityMultiLauncher.ViewModels
 
 		protected void AddUnityVersion(object param)
 		{
+			//FileSelectDialog();
+			//return;
 			var a = new System.Windows.Forms.OpenFileDialog();
 			a.Filter = "Programs (.exe)|*.exe|All Files (*.*)|*.*";
 			//a.Filter = "exe";
@@ -51,7 +53,7 @@ namespace UnityMultiLauncher.ViewModels
 			var exec = unityExe == null ? Util.GetUnityExecutableFromVersion(projectVersion) : unityExe;
 			if (exec != null)
 			{
-				System.Diagnostics.Process.Start(exec.LocalPath, string.Format("-projectpath {0}", projectLocation.LocalPath));
+				System.Diagnostics.Process.Start(exec.LocalPath, string.Format("-projectpath \"{0}\"", projectLocation.LocalPath));
 				UpdateProperty(nameof(unityProjectLocations));
 			}
 			else
@@ -100,6 +102,13 @@ namespace UnityMultiLauncher.ViewModels
 			MainWindow.cwin.ShowMetroDialogAsync(cd as CustomDialog, dialogSettings);
 			selectedProject = project;
 			selectedVersion = Util.GetUnityExecutableFromVersion(Util.UnityProjectVersion(project));
+		}
+
+		protected void FileSelectDialog()
+		{
+			var cd = MainWindow.cwin.TryFindResource("FileBrowser");
+			MainWindow.cwin.ShowMetroDialogAsync(cd as CustomDialog);
+			
 		}
 
 		public ObservableCollection<Uri> unityLocations
@@ -303,6 +312,19 @@ namespace UnityMultiLauncher.ViewModels
 			get
 			{
 				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(DumpUnityExeInfoFunc));
+			}
+		}
+
+		public void OpenUnityProjectLocation(object param)
+		{
+			System.Diagnostics.Process.Start((param as Uri).LocalPath);
+		}
+
+		public ViewCommand OpenUnityProjectLocaitonCommand
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(OpenUnityProjectLocation));
 			}
 		}
 	}

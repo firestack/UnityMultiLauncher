@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.25928.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityMultiLauncher", "UnityMultiLauncher\UnityMultiLauncher.csproj", "{5468AB5C-3920-47B5-8FB8-3E6B084DCCFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFireUtil", "WPFireUtil\WPFireUtil.csproj", "{604B15C9-2391-4D76-B2ED-F4E427F288AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +20,12 @@ Global
 		{5468AB5C-3920-47B5-8FB8-3E6B084DCCFB}.ExampleDev|Any CPU.Build.0 = ExampleDev|Any CPU
 		{5468AB5C-3920-47B5-8FB8-3E6B084DCCFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5468AB5C-3920-47B5-8FB8-3E6B084DCCFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{604B15C9-2391-4D76-B2ED-F4E427F288AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{604B15C9-2391-4D76-B2ED-F4E427F288AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{604B15C9-2391-4D76-B2ED-F4E427F288AE}.ExampleDev|Any CPU.ActiveCfg = Release|Any CPU
+		{604B15C9-2391-4D76-B2ED-F4E427F288AE}.ExampleDev|Any CPU.Build.0 = Release|Any CPU
+		{604B15C9-2391-4D76-B2ED-F4E427F288AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{604B15C9-2391-4D76-B2ED-F4E427F288AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

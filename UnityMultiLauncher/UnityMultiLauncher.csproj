@@ -202,6 +202,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WPFireUtil\WPFireUtil.csproj">
+      <Project>{604b15c9-2391-4d76-b2ed-f4e427f288ae}</Project>
+      <Name>WPFireUtil</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

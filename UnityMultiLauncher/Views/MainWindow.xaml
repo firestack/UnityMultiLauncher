@@ -8,6 +8,7 @@
 	xmlns:Converter="clr-namespace:UnityMultiLauncher.Controls.Converters"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:FireUtil="clr-namespace:WPFireUtil;assembly=WPFireUtil"
 	xmlns:System="clr-namespace:System;assembly=mscorlib"
 	mc:Ignorable="d" 
 	x:Name="metroWindow" 
@@ -94,6 +95,24 @@
 			</Grid>
 		</Dialog:CustomDialog>
 
+		<Dialog:CustomDialog x:Key="FileBrowser">
+			
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<FireUtil:FileBrowser/>
+				<Button
+						Style="{DynamicResource AccentedDialogSquareButton}"
+						Content="Cancel"
+						Command="{Binding HideDialog, Mode=OneWay, Source={StaticResource util}}"
+						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}"
+						MinWidth="80"
+						Margin="0 0 5 0" Grid.Row="1"
+				/>
+			</Grid>
+		</Dialog:CustomDialog>
 	</Controls:MetroWindow.Resources>
 
 	<Controls:MetroWindow.RightWindowCommands>
@@ -205,12 +224,18 @@
 							BorderBrush="White">
 							<Button.ContextMenu>
 								<ContextMenu>
-									<MenuItem Header="Copy Project" />
+									<!--<MenuItem Header="Copy Project" />-->
 									<MenuItem 
 										Header="Select Version" 
 										Command="{Binding unitySelectVersionDialog, Mode=OneWay, Source={StaticResource unity}}" 
 										CommandParameter="{Binding Item1}"
 									/>
+									<MenuItem 
+										Header="Open Locaiton In Explorer" 
+										Command="{Binding OpenUnityProjectLocaitonCommand, Mode=OneWay, Source={StaticResource unity}}" 
+										CommandParameter="{Binding Item1}" 
+									/>
+
 								</ContextMenu>
 							</Button.ContextMenu>
 							<Grid Width="Auto" VerticalAlignment="Stretch">
