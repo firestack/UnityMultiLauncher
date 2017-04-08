@@ -49,12 +49,21 @@ namespace UnityMultiLauncher
 			}
 		}
 
-		public string appTheme = "BaseLight";
+        public HashSet<Uri> UnityExeLocations {
+            get
+            {
+                unityExeLocations.RemoveWhere(item => !System.IO.File.Exists(item.AbsolutePath));
+                return unityExeLocations;
+            }
+            set => unityExeLocations = value;
+        }
+
+        public string appTheme = "BaseLight";
 
 		public string appAccent = "Blue";
 
-		public HashSet<Uri> unityExeLocations = new HashSet<Uri>();
+        private HashSet<Uri> unityExeLocations = new HashSet<Uri>();
 
-		public bool ShouldUseUnitySubVersion = false;
+        public bool ShouldUseUnitySubVersion = false;
 	}
 }

@@ -54,7 +54,7 @@ namespace UnityMultiLauncher
 
 		public static Uri GetUnityExecutableFromVersion(Tuple<int, int, int, int> version)
 		{
-			foreach (var exe in ProgramConfig.conf.unityExeLocations)
+			foreach (var exe in ProgramConfig.conf.UnityExeLocations)
 			{
 				var a = FileVersionInfo.GetVersionInfo(exe.LocalPath);
 				if(a.ProductMajorPart == version.Item1 && a.ProductMinorPart == version.Item2 && a.ProductBuildPart == version.Item3)

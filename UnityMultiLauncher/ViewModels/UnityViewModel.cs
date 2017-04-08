@@ -31,7 +31,7 @@ namespace UnityMultiLauncher.ViewModels
 			//a.Filter = "exe";
 			if (a.ShowDialog() == DialogResult.OK)
 			{
-				ProgramConfig.conf.unityExeLocations.Add(new Uri(a.FileName));
+				ProgramConfig.conf.UnityExeLocations.Add(new Uri(a.FileName));
 				unityLocations.Add(new Uri(a.FileName));
 				UpdateProperty(nameof(unityLocations));
 				ProgramConfig.conf.Save();
@@ -41,7 +41,7 @@ namespace UnityMultiLauncher.ViewModels
 
 		protected void RemoveUnityVersion(object param)
 		{
-			ProgramConfig.conf.unityExeLocations.Remove(param as Uri);
+			ProgramConfig.conf.UnityExeLocations.Remove(param as Uri);
 			unityLocations.Remove(param as Uri);
 			ProgramConfig.conf.Save();
 			UpdateProperty(nameof(unityLocations));
@@ -90,7 +90,7 @@ namespace UnityMultiLauncher.ViewModels
 
 		protected void DuplicateUnityProject(Uri param)
 		{
-			ProgramConfig.conf.unityExeLocations.Remove(param);
+			ProgramConfig.conf.UnityExeLocations.Remove(param);
 			unityLocations.Remove(param);
 			ProgramConfig.conf.Save();
 			UpdateProperty(nameof(unityLocations));
@@ -115,7 +115,7 @@ namespace UnityMultiLauncher.ViewModels
 		{
 			get
 			{
-				return GetProperty() as ObservableCollection<Uri> ?? SetProperty(new ObservableCollection<Uri>(ProgramConfig.conf.unityExeLocations));
+				return GetProperty() as ObservableCollection<Uri> ?? SetProperty(new ObservableCollection<Uri>(ProgramConfig.conf.UnityExeLocations));
 			}
 		}
 
