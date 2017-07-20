@@ -7,7 +7,9 @@ namespace UnityMultiLauncher
 {
 	public static class Util
 	{
-		private static Regex versionExp = new Regex(@"(\d+)\.(\d+)\.(\d+)([A-z]+)(\d+)", RegexOptions.Compiled);
+		//private static Regex versionExp = new Regex(@"(\d+)\.(\d+)\.(\d+)([A-z]+)(\d+)", RegexOptions.Compiled);
+		private static Regex versionExp = new Regex(@"\d+\.\d+\.\d+[A-z]\d+", RegexOptions.Compiled);
+		
 
 		public static string UnityProjectSettings(Uri project, string key)
 		{
@@ -31,7 +33,7 @@ namespace UnityMultiLauncher
 
 		}
 
-		public static Tuple<int, int, int, int> UnityProjectVersion(Uri project)
+		public static Version UnityProjectVersion(Uri project)
 		{
 			var filename = System.IO.Path.Combine(project.LocalPath, @"ProjectSettings\ProjectVersion.txt");
 			if (System.IO.File.Exists(filename))
@@ -40,7 +42,8 @@ namespace UnityMultiLauncher
 				var match = versionExp.Match(data);
 				try
 				{
-					return Tuple.Create(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[5].Value));
+					//return Version.Parse(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[5].Value));
+					return Version.Parse(match.ToString().Replace('f','.'));
 				}
 				catch (Exception E)
 				{
@@ -52,12 +55,12 @@ namespace UnityMultiLauncher
 			return null;
 		}
 
-		public static Uri GetUnityExecutableFromVersion(Tuple<int, int, int, int> version)
+		public static Uri GetUnityExecutableFromVersion(Version version)
 		{
 			foreach (var exe in ProgramConfig.conf.UnityExeLocations)
 			{
 				var a = FileVersionInfo.GetVersionInfo(exe.LocalPath);
-				if(a.ProductMajorPart == version.Item1 && a.ProductMinorPart == version.Item2 && a.ProductBuildPart == version.Item3)
+				if(a.ProductMajorPart == version.Major && a.ProductMinorPart == version.Minor && a.ProductBuildPart == version.Build)
 				{
 					return exe;
 				}

@@ -62,7 +62,7 @@ namespace UnityMultiLauncher.ViewModels
 				MainWindow.cwin.ShowMessageAsync(
 					"Unity Not Found",
 					string.Format("The Unity Version For This Project Is Not Installed \n({0})",
-					string.Format("Unity {0}.{1}.{2}", projectVersion.Item1, projectVersion.Item2, projectVersion.Item3)),
+					string.Format("Unity {0}.{1}.{2}", projectVersion.Major, projectVersion.Minor, projectVersion.Revision)),
 					MessageDialogStyle.Affirmative,
 					dialogSettings
 				).ContinueWith(
@@ -172,6 +172,10 @@ namespace UnityMultiLauncher.ViewModels
 				}			
 #else
 				var unityKeys = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Unity Technologies\Unity Editor 5.x\", false);
+                if(unityKeys == null)
+                {
+                    yield break;
+                }
 				var matchingKeys = unityKeys.GetValueNames().Where(key => key.Contains("RecentlyUsedProjectPaths"));
 
 				var pos = matchingKeys.Select(key => new Uri(Encoding.UTF8.GetString(unityKeys.GetValue(key) as byte[]).TrimEnd((char)0)));
@@ -185,10 +189,10 @@ namespace UnityMultiLauncher.ViewModels
 								project, 
 								project.LocalPath.Substring(project.LocalPath.LastIndexOf('\\') + 1), 
 								string.Format("{0}.{1}.{2}f{3}", 
-									projectVersion.Item1, 
-									projectVersion.Item2, 
-									projectVersion.Item3, 
-									projectVersion.Item4
+									projectVersion.Major, 
+									projectVersion.Minor, 
+									projectVersion.Build, 
+									projectVersion.Revision
 								)
 							);
 					}
