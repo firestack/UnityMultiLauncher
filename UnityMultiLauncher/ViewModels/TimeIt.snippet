@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<CodeSnippet Format="1.0.0">
+		<Header>
+			<Title>Time It</Title>
+			<Shortcut>timeit</Shortcut>
+			<Description>Code Snippet for timing function</Description>
+			<Author>Bombmask</Author>
+			<SnippetTypes>
+				<SnippetType>Expansion</SnippetType>
+				<SnippetType>SurroundsWith</SnippetType>
+			</SnippetTypes>
+		</Header>
+		<Snippet>
+			<Declarations>
+				<Object>
+					<ID>StopwatchVarName</ID>
+					<Type>System.Diagnostics.Stopwatch</Type>
+					<ToolTip>Variable name for stopwatch</ToolTip>
+					<Default>stopwatch</Default>
+				</Object>
+			</Declarations>
+			<Code Language="csharp">
+				<![CDATA[
+					var $StopwatchVarName$ = System.Diagnostics.Stopwatch.StartNew();
+	        $selected$ $end$
+					$StopwatchVarName$.Stop();]]>
+			</Code>
+		</Snippet>
+	</CodeSnippet>
+</CodeSnippets>

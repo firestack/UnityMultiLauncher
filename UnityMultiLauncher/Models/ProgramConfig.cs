@@ -6,6 +6,7 @@ using MahApps.Metro;
 
 namespace UnityMultiLauncher
 {
+
 	public class ProgramConfig : Utility.ConfigLoader.Config
 	{
 		protected static ProgramConfig _conf;
@@ -30,7 +31,7 @@ namespace UnityMultiLauncher
 			}
 		}
 
-		public static string defaultFilename { get { return string.Format("unitymultilauncher.{0}.cfg.json", Environment.UserName); } }
+		public static string defaultFilename { get { return $"unitymultilauncher.{Environment.UserName}.cfg.json"; } }
 
 		[JsonIgnore]
 		public Tuple<AppTheme, Accent> appStyle
@@ -48,11 +49,11 @@ namespace UnityMultiLauncher
 				appAccent = value.Item2.Name;
 			}
 		}
-
-        public HashSet<Uri> UnityExeLocations {
+		[JsonIgnore]
+        public HashSet<Uri> ValidUnityExeLocations {
             get
             {
-                unityExeLocations.RemoveWhere(item => !System.IO.File.Exists(item.AbsolutePath));
+                unityExeLocations.RemoveWhere(item => !System.IO.File.Exists(item.LocalPath));
                 return unityExeLocations;
             }
             set => unityExeLocations = value;
@@ -62,7 +63,7 @@ namespace UnityMultiLauncher
 
 		public string appAccent = "Blue";
 
-        private HashSet<Uri> unityExeLocations = new HashSet<Uri>();
+        public HashSet<Uri> unityExeLocations = new HashSet<Uri>();
 
         public bool ShouldUseUnitySubVersion = false;
 	}

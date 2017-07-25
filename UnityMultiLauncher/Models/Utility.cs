@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -57,10 +58,15 @@ namespace UnityMultiLauncher
 
 		public static Uri GetUnityExecutableFromVersion(Version version)
 		{
-			foreach (var exe in ProgramConfig.conf.UnityExeLocations)
+				//return ProgramConfig.conf.ValidUnityExeLocations
+				//	.Select(loc => (loc, GetUnityVersionFromExecutable(loc)))
+				//	.Where(exe => version.Major == exe.Item2.Major && version.Minor == exe.Item2.Minor && version.Build == exe.Item2.Build)
+				//	.Aggregate((Uri null, Version null), (working, next) => working.Item2.Revision > next.Item2.Revision ? working : next).Item1;
+
+			foreach (var exe in ProgramConfig.conf.ValidUnityExeLocations)
 			{
-				var a = FileVersionInfo.GetVersionInfo(exe.LocalPath);
-				if(a.ProductMajorPart == version.Major && a.ProductMinorPart == version.Minor && a.ProductBuildPart == version.Build)
+				var a = GetUnityVersionFromExecutable(exe);
+				if(version.Major == a.Major && version.Minor == a.Minor && version.Build == a.Build)
 				{
 					return exe;
 				}
@@ -68,10 +74,10 @@ namespace UnityMultiLauncher
 			return null;
 		}
 
-		public static Tuple<int, int, int, int> GetUnityVersionFromExecutable(Uri exec)
+		public static Version GetUnityVersionFromExecutable(Uri exec)
 		{
 			var versionInfo = FileVersionInfo.GetVersionInfo(exec.LocalPath);
-			return Tuple.Create(versionInfo.ProductMajorPart, versionInfo.ProductMinorPart, versionInfo.ProductBuildPart, 0);
+			return new Version(versionInfo.ProductMajorPart, versionInfo.ProductMinorPart, versionInfo.ProductBuildPart, 0);
 		}
 
 		public static void DumpUnityVersionInfo(Uri exec)

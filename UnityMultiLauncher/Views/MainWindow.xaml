@@ -117,7 +117,7 @@
 
 	<Controls:MetroWindow.RightWindowCommands>
 		<Controls:WindowCommands>
-			<Button Content="Add Unity Executable" Command="{Binding addUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
+			<Button Content="Find Unity Executables" Command="{Binding addUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
 			<Button Content="Settings" Command="{Binding OpenFlyout, Source={StaticResource util}}" CommandParameter="{Binding ElementName=SettingsFlyout, Mode=OneWay}"/>
 		</Controls:WindowCommands>
 	</Controls:MetroWindow.RightWindowCommands>
