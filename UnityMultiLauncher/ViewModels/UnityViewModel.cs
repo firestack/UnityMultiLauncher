@@ -14,18 +14,18 @@ namespace UnityMultiLauncher.ViewModels
 	public class UnityViewModel : ViewModel
 	{
 		protected List<Uri> extraProjectLoctions = new List<Uri>();
-
-		protected void LaunchUnityVersion(Uri unityExe)
+		#region Methods
+		protected void LaunchUnityVersion(Uri unityExe, params string[] args)
 		{
 
-			System.Diagnostics.Process.Start(unityExe.LocalPath);
-			UpdateProperty(nameof(unityProjectLocations));
+			System.Diagnostics.Process.Start(unityExe.LocalPath, string.Join(" ", args));
+			UpdateProperty(nameof(UnityProjectLocations));
 		}
 
 		protected void SearchUnityVersions()
 		{
 			var a = new System.Windows.Forms.FolderBrowserDialog();
-			if(a.ShowDialog() == DialogResult.OK)
+			if (a.ShowDialog() == DialogResult.OK)
 			{
 				var path = new System.IO.DirectoryInfo(a.SelectedPath);
 
@@ -35,18 +35,18 @@ namespace UnityMultiLauncher.ViewModels
 				{
 					AddUnityExe(location.FullName);
 				}
-				
+
 				stopwatch.Stop();
-				
-								
+
+
 			}
 		}
 
-		private void AddUnityExe(string location)
+		protected void AddUnityExe(string location)
 		{
 			ProgramConfig.conf.unityExeLocations.Add(new Uri(location));
-			unityLocations.Add(new Uri(location));
-			UpdateProperty(nameof(unityLocations));
+			UnityLocations.Add(new Uri(location));
+			UpdateProperty(nameof(UnityLocations));
 			ProgramConfig.conf.Save();
 		}
 
@@ -54,8 +54,10 @@ namespace UnityMultiLauncher.ViewModels
 		{
 			//FileSelectDialog();
 			//return;
-			var a = new System.Windows.Forms.OpenFileDialog();
-			a.Filter = "Programs (.exe)|*.exe|All Files (*.*)|*.*";
+			var a = new System.Windows.Forms.OpenFileDialog()
+			{
+				Filter = "Programs (.exe)|*.exe|All Files (*.*)|*.*"
+			};
 			//a.Filter = "exe";
 			if (a.ShowDialog() == DialogResult.OK)
 			{
@@ -67,22 +69,23 @@ namespace UnityMultiLauncher.ViewModels
 		protected void RemoveUnityVersion(object param)
 		{
 			ProgramConfig.conf.ValidUnityExeLocations.Remove(param as Uri);
-			unityLocations.Remove(param as Uri);
+			UnityLocations.Remove(param as Uri);
 			ProgramConfig.conf.Save();
-			UpdateProperty(nameof(unityLocations));
+			UpdateProperty(nameof(UnityLocations));
 		}
 
 		protected void LaunchProject(Uri projectLocation, Uri unityExe = null)
 		{
 			var projectVersion = Util.UnityProjectVersion(projectLocation);
-			if(unityExe == null)
+			if (unityExe == null)
 			{
 				unityExe = Util.GetUnityExecutableFromVersion(projectVersion);
 			}
 			if (unityExe != null)
 			{
-				System.Diagnostics.Process.Start(unityExe.LocalPath, $"-projectpath \"{projectLocation.LocalPath}\"" );
-				UpdateProperty(nameof(unityProjectLocations));
+				LaunchUnityVersion(unityExe, "-projectpath", $"\"{projectLocation.LocalPath}\"");
+				//System.Diagnostics.Process.Start(unityExe.LocalPath, $"-projectpath \"{}\"" );
+				UpdateProperty(nameof(UnityProjectLocations));
 			}
 			else
 			{
@@ -94,51 +97,62 @@ namespace UnityMultiLauncher.ViewModels
 					dialogSettings
 				).ContinueWith(
 					// HACK: This makes the screen oddly flash (This could either be the thread switch or the animate show affecting it oddly
-					(a) => System.Windows.Application.Current.Dispatcher.Invoke(() => SelectUnityVersionDialog(projectLocation, new MetroDialogSettings { AnimateShow = false}))
+					(a) => System.Windows.Application.Current.Dispatcher.Invoke(() => SelectUnityVersionDialog(projectLocation, new MetroDialogSettings { AnimateShow = false }))
 				);
 			}
 			if (unityExe == null)
 			{
-				selectedVersion = null;
-				selectedProject = null;
+				SelectedVersion = null;
+				SelectedProject = null;
 			}
 		}
 
 		protected void AddUnityProject()
 		{
 			var a = new FolderBrowserDialog();
-			
+
 			if (a.ShowDialog() == DialogResult.OK)
 			{
 				extraProjectLoctions.Add(new Uri(a.SelectedPath));
-				UpdateProperty(nameof(unityProjectLocations));
+				UpdateProperty(nameof(UnityProjectLocations));
 			}
 		}
 
 		protected void DuplicateUnityProject(Uri param)
 		{
 			ProgramConfig.conf.ValidUnityExeLocations.Remove(param);
-			unityLocations.Remove(param);
+			UnityLocations.Remove(param);
 			ProgramConfig.conf.Save();
-			UpdateProperty(nameof(unityLocations));
+			UpdateProperty(nameof(UnityLocations));
 		}
 
 		protected void SelectUnityVersionDialog(Uri project, MetroDialogSettings dialogSettings = null)
 		{
 			var cd = MainWindow.cwin.TryFindResource("CustomLaunchDialog");
 			MainWindow.cwin.ShowMetroDialogAsync(cd as CustomDialog, dialogSettings);
-			selectedProject = project;
-			selectedVersion = Util.GetUnityExecutableFromVersion(Util.UnityProjectVersion(project));
+			SelectedProject = project;
+			SelectedVersion = Util.GetUnityExecutableFromVersion(Util.UnityProjectVersion(project));
 		}
 
 		protected void FileSelectDialog()
 		{
 			var cd = MainWindow.cwin.TryFindResource("FileBrowser");
 			MainWindow.cwin.ShowMetroDialogAsync(cd as CustomDialog);
-			
+
 		}
 
-		public ObservableCollection<Uri> unityLocations
+		public void DumpUnityExeInfoFunc(object uri)
+		{
+			Util.DumpUnityVersionInfo(uri as Uri);
+		}
+
+		public void OpenUnityProjectLocation(object param)
+		{
+			System.Diagnostics.Process.Start((param as Uri).LocalPath);
+		}
+		#endregion
+		#region Properties
+		public ObservableCollection<Uri> UnityLocations
 		{
 			get
 			{
@@ -153,7 +167,7 @@ namespace UnityMultiLauncher.ViewModels
 				ListCollectionView prop = GetProperty() as ListCollectionView;
 				if (prop == null)
 				{
-					var p = CollectionViewSource.GetDefaultView((IList<Uri>)unityLocations) as ListCollectionView;
+					var p = CollectionViewSource.GetDefaultView((IList<Uri>)UnityLocations) as ListCollectionView;
 					prop = SetProperty(p as ListCollectionView);
 					prop.CustomSort = Comparer<Uri>.Create(
 						(A, B) => Util.GetUnityVersionFromExecutable(B).CompareTo(Util.GetUnityVersionFromExecutable(A))
@@ -166,7 +180,7 @@ namespace UnityMultiLauncher.ViewModels
 			}
 		}
 
-		public IEnumerable<Tuple<Uri, string, string>> unityProjectLocations
+		public IEnumerable<Tuple<Uri, string, string>> UnityProjectLocations
 		{
 			get
 			{
@@ -182,14 +196,14 @@ namespace UnityMultiLauncher.ViewModels
 				}			
 #else
 				var unityKeys = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Unity Technologies\Unity Editor 5.x\", false);
-                if(unityKeys == null)
-                {
-                    yield break;
-                }
+				if (unityKeys == null)
+				{
+					yield break;
+				}
 				var matchingKeys = unityKeys.GetValueNames().Where(key => key.Contains("RecentlyUsedProjectPaths"));
 
 				var pos = matchingKeys.Select(key => new Uri(Encoding.UTF8.GetString(unityKeys.GetValue(key) as byte[]).TrimEnd((char)0)));
-				foreach (var project in extraProjectLoctions.Concat(pos) )
+				foreach (var project in extraProjectLoctions.Concat(pos))
 				{
 					if (System.IO.Directory.Exists(project.LocalPath) && System.IO.Directory.Exists(System.IO.Path.Combine(project.LocalPath, "Assets")))
 					{
@@ -207,7 +221,7 @@ namespace UnityMultiLauncher.ViewModels
 			}
 		}
 
-		public Uri selectedProject
+		public Uri SelectedProject
 		{
 			get
 			{
@@ -219,7 +233,7 @@ namespace UnityMultiLauncher.ViewModels
 			}
 		}
 
-		public Uri selectedVersion
+		public Uri SelectedVersion
 		{
 			get
 			{
@@ -233,70 +247,6 @@ namespace UnityMultiLauncher.ViewModels
 
 		public bool SupportUnitySubversion { get; set; }
 
-		public ViewCommand launchUnity
-		{
-			get
-			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => LaunchUnityVersion(param as Uri)));
-			}
-		}
-
-		public ViewCommand launchUnityProject
-		{
-			get
-			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => LaunchProject(param as Uri)));
-			}
-		}
-
-		public ViewCommand addUnityProject
-		{
-			get
-			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => AddUnityProject()));
-			}
-		}
-
-		public ViewCommand launchUnityProjectWithVersion
-		{
-			get
-			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => { LaunchProject(selectedProject, selectedVersion); UtilViewModel.HideDialogFunc(param); }));
-			}
-		}
-
-		public ViewCommand addUnityVersion
-		{
-			get
-			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => SearchUnityVersions()));
-			}
-		}
-
-		public ViewCommand removeUnityVersion
-		{
-			get
-			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => RemoveUnityVersion(param)));
-			}
-		}
-
-		public ViewCommand duplicateUnityProject
-		{
-			get
-			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => DuplicateUnityProject(param as Uri)));
-			}
-		}
-
-		public ViewCommand unitySelectVersionDialog
-		{
-			get
-			{
-				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => SelectUnityVersionDialog(param as Uri)));
-			}
-		}
-
 		public bool UseUnitySubVersion
 		{
 			get
@@ -309,14 +259,74 @@ namespace UnityMultiLauncher.ViewModels
 				ProgramConfig.conf.Save();
 				UpdateProperty();
 			}
-		}
-
-		public void DumpUnityExeInfoFunc(object uri)
+		} 
+		#endregion
+		#region Commands
+		public ViewCommand CmdLaunchUnity
 		{
-			Util.DumpUnityVersionInfo(uri as Uri);
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => LaunchUnityVersion(param as Uri)));
+			}
 		}
 
-		public ViewCommand DumpUnityExeInfo
+		public ViewCommand CmdLaunchUnityProject
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => LaunchProject(param as Uri)));
+			}
+		}
+
+		public ViewCommand CmdAddUnityProject
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => AddUnityProject()));
+			}
+		}
+
+		public ViewCommand CmdLaunchUnityProjectWithVersion
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => { LaunchProject(SelectedProject, SelectedVersion); UtilViewModel.HideDialogFunc(param); }));
+			}
+		}
+
+		public ViewCommand CmdAddUnityVersion
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => SearchUnityVersions()));
+			}
+		}
+
+		public ViewCommand CmdRemoveUnityVersion
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => RemoveUnityVersion(param)));
+			}
+		}
+
+		public ViewCommand CmdDuplicateUnityProject
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => DuplicateUnityProject(param as Uri)));
+			}
+		}
+
+		public ViewCommand CmdUnitySelectVersionDialog
+		{
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(param => SelectUnityVersionDialog(param as Uri)));
+			}
+		}
+
+		public ViewCommand CmdDumpUnityExeInfo
 		{
 			get
 			{
@@ -324,17 +334,21 @@ namespace UnityMultiLauncher.ViewModels
 			}
 		}
 
-		public void OpenUnityProjectLocation(object param)
+		public ViewCommand CmdCreateTemporaryProject
 		{
-			System.Diagnostics.Process.Start((param as Uri).LocalPath);
+			get
+			{
+				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(obj => LaunchUnityVersion((Uri)obj, "-temporary")));
+			}
 		}
 
-		public ViewCommand OpenUnityProjectLocaitonCommand
+		public ViewCommand CmdOpenUnityProjectLocaiton
 		{
 			get
 			{
 				return GetProperty() as ViewCommand ?? SetProperty(new ViewCommand(OpenUnityProjectLocation));
 			}
-		}
+		} 
+		#endregion
 	}
 }

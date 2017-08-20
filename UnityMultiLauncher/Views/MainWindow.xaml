@@ -50,15 +50,15 @@
                     TextWrapping="Wrap"
 					FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
 					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-					Text="{Binding selectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat=Select Unity Version to Open Project \&quot;\{0\}\&quot; With}" 
+					Text="{Binding SelectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat=Select Unity Version to Open Project \&quot;\{0\}\&quot; With}" 
 				/>
 				<TextBlock Grid.Row="1" HorizontalAlignment="Center"
 						   FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
 					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"><Run Text="THIS WILL CHANGE YOUR PROJECTS VERSION"/></TextBlock>
 
 				<ComboBox 
-					ItemsSource="{Binding unityLocations, Source={StaticResource unity}}" 
-					SelectedItem="{Binding selectedVersion, Source={StaticResource unity}}"
+					ItemsSource="{Binding UnityLocations, Source={StaticResource unity}}" 
+					SelectedItem="{Binding SelectedVersion, Source={StaticResource unity}}"
 					Grid.Row="2" 
 				>
 					<ComboBox.ItemTemplate>
@@ -75,7 +75,7 @@
 					<Button 
 						Style="{DynamicResource AccentedDialogSquareButton}"
 						Content="Launch" 
-						Command="{Binding launchUnityProjectWithVersion, Mode=OneWay, Source={StaticResource unity}}" 
+						Command="{Binding CmdLaunchUnityProjectWithVersion, Mode=OneWay, Source={StaticResource unity}}" 
 						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}" 
 						Height="35"
 						MinWidth="80"
@@ -117,7 +117,7 @@
 
 	<Controls:MetroWindow.RightWindowCommands>
 		<Controls:WindowCommands>
-			<Button Content="Find Unity Executables" Command="{Binding addUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
+			<Button Content="Find Unity Executables" Command="{Binding CmdAddUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
 			<Button Content="Settings" Command="{Binding OpenFlyout, Source={StaticResource util}}" CommandParameter="{Binding ElementName=SettingsFlyout, Mode=OneWay}"/>
 		</Controls:WindowCommands>
 	</Controls:MetroWindow.RightWindowCommands>
@@ -155,7 +155,7 @@
 				<DataTemplate>
 					<Button 
 						Style="{StaticResource AccentedSquareButtonStyle}" 
-						Command="{Binding launchUnity, Mode=OneWay, Source={StaticResource unity}}"
+						Command="{Binding CmdLaunchUnity, Mode=OneWay, Source={StaticResource unity}}"
 						CommandParameter="{Binding}"
 						HorizontalAlignment="Stretch" 
 						VerticalAlignment="Stretch" 
@@ -168,14 +168,19 @@
 							<ContextMenu>
 								<MenuItem
 									Header="Remove From Launcher" 
-									Command="{Binding removeUnityVersion, Source={StaticResource unity}}" 
+									Command="{Binding CmdRemoveUnityVersion, Source={StaticResource unity}}" 
 									CommandParameter="{Binding Mode=OneWay}"
 								/>
 								<MenuItem 
 									Header="Dump Unity Info (Send to devs)"
-									Command="{Binding DumpUnityExeInfo, Mode=OneWay, Source={StaticResource unity}}"
+									Command="{Binding CmdDumpUnityExeInfo, Mode=OneWay, Source={StaticResource unity}}"
 									CommandParameter="{Binding}"
 									Visibility="{Binding UseUnitySubVersion, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource unity}}"
+									/>
+								<MenuItem 
+									Header="Create Temporary Project"
+									Command="{Binding CmdCreateTemporaryProject, Mode=OneWay, Source={StaticResource unity}}"
+									CommandParameter="{Binding}"
 									/>
 							</ContextMenu>
 						</Button.ContextMenu>
@@ -195,7 +200,7 @@
 		</ItemsControl>
 
 		<Label x:Name="label" Content="Open Unity Project" HorizontalAlignment="Left" Margin="0" Grid.Row="2" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"/>
-		<Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Command="{Binding addUnityProject, Mode=OneWay, Source={StaticResource unity}}" Content="Add Project" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0" Padding="30,5">
+		<Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Command="{Binding CmdAddUnityProject, Mode=OneWay, Source={StaticResource unity}}" Content="Add Project" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0" Padding="30,5">
 			<!--<StackPanel>
 				
 				<Rectangle Width="20"
@@ -210,14 +215,14 @@
 			</StackPanel>-->
 		</Button>
 		<ScrollViewer Grid.Row="3" Grid.ColumnSpan="2">
-			<ItemsControl Grid.Row="3" ItemsSource="{Binding unityProjectLocations, Source={StaticResource unity}}">
+			<ItemsControl Grid.Row="3" ItemsSource="{Binding UnityProjectLocations, Source={StaticResource unity}}">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate>
 						<Button 
 							Style="{StaticResource AccentedSquareButtonStyle}" 
 							HorizontalContentAlignment="Stretch" 
 							VerticalContentAlignment="Stretch" 
-							Command="{Binding launchUnityProject, Mode=OneWay, Source={StaticResource unity}}"
+							Command="{Binding CmdLaunchUnityProject, Mode=OneWay, Source={StaticResource unity}}"
 							CommandParameter="{Binding Item1, Mode=OneWay}"
 							Padding="15,5,27,5" 
 							BorderThickness="0" 
@@ -227,12 +232,12 @@
 									<!--<MenuItem Header="Copy Project" />-->
 									<MenuItem 
 										Header="Select Version" 
-										Command="{Binding unitySelectVersionDialog, Mode=OneWay, Source={StaticResource unity}}" 
+										Command="{Binding CmdUnitySelectVersionDialog, Mode=OneWay, Source={StaticResource unity}}" 
 										CommandParameter="{Binding Item1}"
 									/>
 									<MenuItem 
 										Header="Open Locaiton In Explorer" 
-										Command="{Binding OpenUnityProjectLocaitonCommand, Mode=OneWay, Source={StaticResource unity}}" 
+										Command="{Binding CmdOpenUnityProjectLocaiton, Mode=OneWay, Source={StaticResource unity}}" 
 										CommandParameter="{Binding Item1}" 
 									/>
 
