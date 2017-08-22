@@ -2,7 +2,7 @@
 [![GitHub release](https://img.shields.io/github/release/firestack/UnityMultiLauncher.svg)](https://github.com/firestack/UnityMultiLauncher/releases/latest) [![GitHub issues](https://img.shields.io/github/issues/firestack/UnityMultiLauncher.svg)](https://github.com/firestack/UnityMultiLauncher/issues)
 
 Managing multiple unity installs can be a pain, so here's a tool to hopefully make that easier.
-![Demo Image](https://raw.githubusercontent.com/firestack/UnityMultiLauncher/data/UMLDemo.PNG)]
+![Demo Image](https://raw.githubusercontent.com/firestack/UnityMultiLauncher/data/UMLDemo.PNG)
 
 ## Awesome Things
  - Unity Multi Launcher finds your latest projects that have already been opened automatically!
