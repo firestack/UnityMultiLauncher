@@ -34,7 +34,7 @@ namespace UnityMultiLauncher
 
 		}
 
-		public static Version UnityProjectVersion(Uri project)
+		public static (Version version, string buildType) UnityProjectVersion(Uri project)
 		{
 			var filename = System.IO.Path.Combine(project.LocalPath, @"ProjectSettings\ProjectVersion.txt");
 			if (System.IO.File.Exists(filename))
@@ -44,8 +44,11 @@ namespace UnityMultiLauncher
 				try
 				{
 					//return Version.Parse(Convert.ToInt32(match.Groups[1].Value), Convert.ToInt32(match.Groups[2].Value), Convert.ToInt32(match.Groups[3].Value), Convert.ToInt32(match.Groups[5].Value));
-					return Version.Parse(match.ToString().Replace('f','.'));
-				}
+					var v = Version.Parse(match.ToString().Replace('f','.').Replace('p','.'));
+
+                    if (match.ToString().Contains("p")) { return (v, "p"); }
+                    else{ return (v, "f"); }
+                }
 				catch (Exception E)
 				{
 					E.Data["ProjectText"] = data.ToString();
@@ -53,7 +56,7 @@ namespace UnityMultiLauncher
 					throw;
 				}
 			}
-			return null;
+			return (null,null);
 		}
 
 		public static Uri GetUnityExecutableFromVersion(Version version)

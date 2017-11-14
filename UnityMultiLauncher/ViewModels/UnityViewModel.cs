@@ -79,7 +79,7 @@ namespace UnityMultiLauncher.ViewModels
 			var projectVersion = Util.UnityProjectVersion(projectLocation);
 			if (unityExe == null)
 			{
-				unityExe = Util.GetUnityExecutableFromVersion(projectVersion);
+				unityExe = Util.GetUnityExecutableFromVersion(projectVersion.version);
 			}
 			if (unityExe != null)
 			{
@@ -92,7 +92,7 @@ namespace UnityMultiLauncher.ViewModels
 				var dialogSettings = new MetroDialogSettings { AnimateHide = false };
 				MainWindow.cwin.ShowMessageAsync(
 					"Unity Not Found",
-					$"The Unity Version For This Project Is Not Installed \n({$"Unity {projectVersion.Major}.{projectVersion.Minor}.{projectVersion.Build}"})",
+					$"The Unity Version For This Project Is Not Installed \n({$"Unity {projectVersion.version.Major}.{projectVersion.version.Minor}.{projectVersion.version.Build}"})",
 					MessageDialogStyle.Affirmative,
 					dialogSettings
 				).ContinueWith(
@@ -131,7 +131,7 @@ namespace UnityMultiLauncher.ViewModels
 			var cd = MainWindow.cwin.TryFindResource("CustomLaunchDialog");
 			MainWindow.cwin.ShowMetroDialogAsync(cd as CustomDialog, dialogSettings);
 			SelectedProject = project;
-			SelectedVersion = Util.GetUnityExecutableFromVersion(Util.UnityProjectVersion(project));
+			SelectedVersion = Util.GetUnityExecutableFromVersion(Util.UnityProjectVersion(project).version);
 		}
 
 		protected void FileSelectDialog()
@@ -208,11 +208,11 @@ namespace UnityMultiLauncher.ViewModels
 					if (System.IO.Directory.Exists(project.LocalPath) && System.IO.Directory.Exists(System.IO.Path.Combine(project.LocalPath, "Assets")))
 					{
 						var projectVersion = Util.UnityProjectVersion(project);
-						if (projectVersion != null)
+						if (projectVersion.version != null)
 							yield return Tuple.Create(
 								project,
 								project.LocalPath.Substring(project.LocalPath.LastIndexOf('\\') + 1),
-								$"{projectVersion.Major}.{projectVersion.Minor}.{projectVersion.Build}f{projectVersion.Revision}"
+								$"{projectVersion.version.Major}.{projectVersion.version.Minor}.{projectVersion.version.Build}{projectVersion.buildType}{projectVersion.version.Revision}"
 							);
 					}
 				}
