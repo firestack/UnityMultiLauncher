@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using UnityMultiFramework;
 
 namespace UMFTests
 {
@@ -10,7 +11,7 @@ namespace UMFTests
 		[TestMethod]
 		public void TestFileLocations()
 		{
-			var a = UnityMultiFramework.Unity.Projects.ProjectLocations.ToList();
+			var a = Unity.Projects.ToList();
 			
 		}
 	}

@@ -66,14 +66,14 @@ namespace UnityMultiLauncher
 				//	.Where(exe => version.Major == exe.Item2.Major && version.Minor == exe.Item2.Minor && version.Build == exe.Item2.Build)
 				//	.Aggregate((Uri null, Version null), (working, next) => working.Item2.Revision > next.Item2.Revision ? working : next).Item1;
 
-			foreach (var exe in ProgramConfig.conf.ValidUnityExeLocations)
-			{
-				var a = GetUnityVersionFromExecutable(exe);
-				if(version.Major == a.Major && version.Minor == a.Minor && version.Build == a.Build)
-				{
-					return exe;
-				}
-			}
+			//foreach (var exe in ProgramConfig.conf.ValidUnityExeLocations)
+			//{
+			//	var a = GetUnityVersionFromExecutable(exe);
+			//	if(version.Major == a.Major && version.Minor == a.Minor && version.Build == a.Build)
+			//	{
+			//		return exe;
+			//	}
+			//}
 			return null;
 		}
 

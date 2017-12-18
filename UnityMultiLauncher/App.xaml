@@ -2,26 +2,115 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:UnityMultiLauncher"
-			 
+             xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+             xmlns:FireUtil="clr-namespace:WPFireUtil;assembly=WPFireUtil"
+             xmlns:Converter="clr-namespace:UnityMultiLauncher.Controls.Converters"
+             xmlns:VM="clr-namespace:UnityMultiLauncher.ViewModels"
              StartupUri="Views\MainWindow.xaml">
-	<Application.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/Dialogs/BaseMetroDialog.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
+                <!-- Accent and AppTheme setting -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Violet.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <!--Icons-->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro.IconPacks;component/Themes/IconPacks.xaml" />
+                <ResourceDictionary>
 
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/Dialogs/BaseMetroDialog.xaml" />
-				
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatButton.xaml" />
-				<!-- Accent and AppTheme setting -->
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Violet.xaml" />
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                    <Converter:ILaunchableCommand x:Key="UnityLaunchCommand"/>
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+                    <VM:UnityViewModel x:Key="unity"/>
+                    <VM:UtilViewModel x:Key="util"/>
+                    <VM:StyleViewModel x:Key="stylevm" />
+                    <Converter:GetProjectNameFromURI x:Key="unityProjectToName" />
+                    <Converter:UnityUriToUnityVersion x:Key="uriToVersion"/>
+                    <Converter:NumberToGoldenRatio x:Key="numberToGold" />
+                    <Dialog:CustomDialog x:Key="CustomLaunchDialog" Title="Open Project With Version">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock 
+                    TextWrapping="Wrap"
+					FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+					Text="{Binding SelectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat=Select Unity Version to Open Project \&quot;\{0\}\&quot; With}" 
+				/>
+                            <TextBlock Grid.Row="1" HorizontalAlignment="Center"
+						   FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
+					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"><Run Text="THIS WILL CHANGE YOUR PROJECTS VERSION"/></TextBlock>
 
-				<!--Icons-->
-				<ResourceDictionary Source="pack://application:,,,/MahApps.Metro.IconPacks;component/Themes/IconPacks.xaml" />
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</Application.Resources>
+                            <ComboBox 
+					ItemsSource="{Binding UnityLocations, Source={StaticResource unity}}" 
+					SelectedItem="{Binding SelectedVersion, Source={StaticResource unity}}"
+					Grid.Row="2" 
+				>
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource uriToVersion}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <StackPanel 
+					Grid.Row="3"
+                    Height="85"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                                <Button 
+						Style="{DynamicResource AccentedDialogSquareButton}"
+						Content="Launch" 
+						Command="{Binding CmdLaunchUnityProjectWithVersion, Mode=OneWay, Source={StaticResource unity}}" 
+						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}" 
+						Height="35"
+						MinWidth="80"
+						Margin="0 0 5 0"
+					/>
+                                <Button
+						Style="{DynamicResource AccentedDialogSquareButton}"
+						Content="Cancel"
+						Command="{Binding HideDialog, Mode=OneWay, Source={StaticResource util}}"
+						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}" 
+						Height="35"
+						MinWidth="80"
+						Margin="0 0 5 0"
+					/>
+                            </StackPanel>
+
+                        </Grid>
+                    </Dialog:CustomDialog>
+                    <Dialog:CustomDialog x:Key="FileBrowser">
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <FireUtil:FileBrowser/>
+                            <Button
+						Style="{DynamicResource AccentedDialogSquareButton}"
+						Content="Cancel"
+						Command="{Binding HideDialog, Mode=OneWay, Source={StaticResource util}}"
+						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}"
+						MinWidth="80"
+						Margin="0 0 5 0" Grid.Row="1"
+				/>
+                        </Grid>
+                    </Dialog:CustomDialog>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </Application.Resources>
 </Application>

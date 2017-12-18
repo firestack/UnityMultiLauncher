@@ -6,5 +6,8 @@ namespace UnityMultiFramework
 	{
 		Version Version { get; }
 		string VersionType { get; }
+
+		//bool operator ==(IVersionable lhs, IVersionable rhs);
+		//bool operator !=(IVersionable lhs, IVersionable rhs);
 	}
 }

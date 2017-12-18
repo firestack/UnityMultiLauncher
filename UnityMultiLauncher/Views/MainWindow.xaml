@@ -16,141 +16,91 @@
 	Title="Unity Multi Launcher"
 	Height="600"
 	Width="800" WindowButtonCommandsOverlayBehavior="Never" RightWindowCommandsOverlayBehavior="Never" >
+    <Controls:MetroWindow.Resources>
 
-	<Controls:MetroWindow.Resources>
+    </Controls:MetroWindow.Resources>
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="Find Unity Executables" Command="{Binding CmdAddUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
+            <Button Content="Settings" Command="{Binding OpenFlyout, Source={StaticResource util}}" CommandParameter="{Binding ElementName=SettingsFlyout, Mode=OneWay}"/>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <Controls:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" IsOpen="False" HorizontalAlignment="Left" Margin="0" Padding="10,70,50,0" >
+                <StackPanel Width="240">
+                    <Label Content="App Theme"/>
+                    <ComboBox ItemsSource="{Binding appTheme, Source={StaticResource stylevm}}" SelectedIndex="{Binding appThemeSelected, Source={StaticResource stylevm}}" />
+                    <Label Content="App Accent"/>
+                    <ComboBox ItemsSource="{Binding appAccent, Source={StaticResource stylevm}}" SelectedIndex="{Binding appAccentSelected, Source={StaticResource stylevm}}" />
+                    <Label Content="Should Use Unity Release Sub Versions"/>
+                    <CheckBox IsChecked="{Binding UseUnitySubVersion, Source={StaticResource unity}}" />
+                </StackPanel>
 
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" MinHeight="100"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="Launch Unity" HorizontalAlignment="Center" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
 
-		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <ItemsControl ItemsSource="{Binding Versions, Source={StaticResource unity}}" Grid.Row="1" Grid.ColumnSpan="2" >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button 
+						Style="{StaticResource AccentedSquareButtonStyle}" 
+						Command="{Binding CmdLaunchUnity, Converter={StaticResource UnityLaunchCommand}, Mode=OneWay, Source={StaticResource unity}}"
+						HorizontalAlignment="Stretch" 
+						VerticalAlignment="Stretch" 
+						Margin="2"
+						BorderThickness="0"
+						MinWidth="25"
+						Width="142.31928"
+					>
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem
+									Header="Remove From Launcher" 
+									Command="{Binding CmdRemoveUnityVersion, Source={StaticResource unity}}" 
+									CommandParameter="{Binding Mode=OneWay}"
+								/>
+                                <!--<MenuItem 
+									Header="Dump Unity Info (Send to devs)"
+									Command="{Binding CmdDumpUnityExeInfo, Mode=OneWay, Source={StaticResource unity}}"
+									CommandParameter="{Binding}"
+									Visibility="{Binding UseUnitySubVersion, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource unity}}"
+									/>-->
+                                <!--<MenuItem 
+									Header="Create Temporary Project"
+									Command="{Binding CmdCreateTemporaryProject, Mode=OneWay, Source={StaticResource unity}}"
+									CommandParameter="{Binding}"
+									/>-->
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                        <StackPanel>
+                            <Image Source="pack://application:,,,/Resources/LargeUnityIcon.png" StretchDirection="DownOnly" Cursor="Hand" Height="50"/>
+                            <Label Content="{Binding Converter={StaticResource uriToVersion}, Mode=OneWay}" ContentStringFormat="Unity {0}" HorizontalAlignment="Center"/>
 
-
-		<VM:UnityViewModel x:Key="unity"/>
-
-		<VM:UtilViewModel x:Key="util"/>
-
-		<VM:StyleViewModel x:Key="stylevm" />
-
-		<Converter:GetProjectNameFromURI x:Key="unityProjectToName" />
-
-		<Converter:UnityUriToUnityVersion x:Key="uriToVersion"/>
-
-		<Converter:NumberToGoldenRatio x:Key="numberToGold" />
-
-		<Dialog:CustomDialog x:Key="CustomLaunchDialog" Title="Open Project With Version">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition/>
-					<RowDefinition/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<TextBlock 
-                    TextWrapping="Wrap"
-					FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-					Text="{Binding SelectedProject, Converter={StaticResource unityProjectToName}, Source={StaticResource unity}, StringFormat=Select Unity Version to Open Project \&quot;\{0\}\&quot; With}" 
-				/>
-				<TextBlock Grid.Row="1" HorizontalAlignment="Center"
-						   FontSize="{Binding DialogMessageFontSize, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"
-					Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Dialog:MessageDialog}, Mode=FindAncestor}, UpdateSourceTrigger=PropertyChanged}"><Run Text="THIS WILL CHANGE YOUR PROJECTS VERSION"/></TextBlock>
-
-				<ComboBox 
-					ItemsSource="{Binding UnityLocations, Source={StaticResource unity}}" 
-					SelectedItem="{Binding SelectedVersion, Source={StaticResource unity}}"
-					Grid.Row="2" 
-				>
-					<ComboBox.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding Converter={StaticResource uriToVersion}}"/>
-						</DataTemplate>
-					</ComboBox.ItemTemplate>
-				</ComboBox>
-				<StackPanel 
-					Grid.Row="3"
-                    Height="85"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal">
-					<Button 
-						Style="{DynamicResource AccentedDialogSquareButton}"
-						Content="Launch" 
-						Command="{Binding CmdLaunchUnityProjectWithVersion, Mode=OneWay, Source={StaticResource unity}}" 
-						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}" 
-						Height="35"
-						MinWidth="80"
-						Margin="0 0 5 0"
-					/>
-					<Button
-						Style="{DynamicResource AccentedDialogSquareButton}"
-						Content="Cancel"
-						Command="{Binding HideDialog, Mode=OneWay, Source={StaticResource util}}"
-						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}" 
-						Height="35"
-						MinWidth="80"
-						Margin="0 0 5 0"
-					/>
-				</StackPanel>
-
-			</Grid>
-		</Dialog:CustomDialog>
-
-		<Dialog:CustomDialog x:Key="FileBrowser">
-			
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
-				<FireUtil:FileBrowser/>
-				<Button
-						Style="{DynamicResource AccentedDialogSquareButton}"
-						Content="Cancel"
-						Command="{Binding HideDialog, Mode=OneWay, Source={StaticResource util}}"
-						CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Dialog:CustomDialog}}}"
-						MinWidth="80"
-						Margin="0 0 5 0" Grid.Row="1"
-				/>
-			</Grid>
-		</Dialog:CustomDialog>
-	</Controls:MetroWindow.Resources>
-
-	<Controls:MetroWindow.RightWindowCommands>
-		<Controls:WindowCommands>
-			<Button Content="Find Unity Executables" Command="{Binding CmdAddUnityVersion, Mode=OneWay, Source={StaticResource unity}}" CommandParameter="{Binding ElementName=metroWindow, Mode=OneWay}" />
-			<Button Content="Settings" Command="{Binding OpenFlyout, Source={StaticResource util}}" CommandParameter="{Binding ElementName=SettingsFlyout, Mode=OneWay}"/>
-		</Controls:WindowCommands>
-	</Controls:MetroWindow.RightWindowCommands>
-
-	<Controls:MetroWindow.Flyouts>
-		<Controls:FlyoutsControl>
-			<Controls:Flyout x:Name="SettingsFlyout" Header="Settings" Position="Right" IsOpen="False" HorizontalAlignment="Left" Margin="0" Padding="10,70,50,0" >
-				<StackPanel Width="240">
-					<Label Content="App Theme"/>
-					<ComboBox ItemsSource="{Binding appTheme, Source={StaticResource stylevm}}" SelectedIndex="{Binding appThemeSelected, Source={StaticResource stylevm}}" />
-					<Label Content="App Accent"/>
-					<ComboBox ItemsSource="{Binding appAccent, Source={StaticResource stylevm}}" SelectedIndex="{Binding appAccentSelected, Source={StaticResource stylevm}}" />
-					<Label Content="Should Use Unity Release Sub Versions"/>
-					<CheckBox IsChecked="{Binding UseUnitySubVersion, Source={StaticResource unity}}" />
-				</StackPanel>
-
-			</Controls:Flyout>
-		</Controls:FlyoutsControl>
-	</Controls:MetroWindow.Flyouts>
-
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
-			<ColumnDefinition/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" MinHeight="100"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
-		<Label Content="Launch Unity" HorizontalAlignment="Center" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Grid.ColumnSpan="2"/>
-		<ItemsControl ItemsSource="{Binding UnityLocationsSorted, Source={StaticResource unity}}" Grid.Row="1" Grid.ColumnSpan="2" >
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UMControls:AlignableWrapPanel HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <!--<ItemsControl ItemsSource="{Binding UnityLocationsSorted, Source={StaticResource unity}}" Grid.Row="1" Grid.ColumnSpan="2" >
 			<ItemsControl.ItemTemplate>
 				<DataTemplate>
 					<Button 
@@ -197,11 +147,11 @@
 					<UMControls:AlignableWrapPanel HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
 				</ItemsPanelTemplate>
 			</ItemsControl.ItemsPanel>
-		</ItemsControl>
+		</ItemsControl>-->
 
-		<Label x:Name="label" Content="Open Unity Project" HorizontalAlignment="Left" Margin="0" Grid.Row="2" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"/>
-		<Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Command="{Binding CmdAddUnityProject, Mode=OneWay, Source={StaticResource unity}}" Content="Add Project" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0" Padding="30,5">
-			<!--<StackPanel>
+        <Label x:Name="label" Content="Open Unity Project" HorizontalAlignment="Left" Margin="0" Grid.Row="2" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom"/>
+        <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" VerticalContentAlignment="Bottom" Command="{Binding CmdAddUnityProject, Mode=OneWay, Source={StaticResource unity}}" Content="Add Project" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0" Padding="30,5">
+            <!--<StackPanel>
 				
 				<Rectangle Width="20"
                    Height="20"
@@ -213,12 +163,12 @@
 				</Rectangle>
 				<TextBlock>Add</TextBlock>
 			</StackPanel>-->
-		</Button>
-		<ScrollViewer Grid.Row="3" Grid.ColumnSpan="2">
-			<ItemsControl Grid.Row="3" ItemsSource="{Binding UnityProjectLocations, Source={StaticResource unity}}">
-				<ItemsControl.ItemTemplate>
-					<DataTemplate>
-						<Button 
+        </Button>
+        <ScrollViewer Grid.Row="3" Grid.ColumnSpan="2">
+            <ItemsControl Grid.Row="3" ItemsSource="{Binding UnityProjectLocations, Source={StaticResource unity}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button 
 							Style="{StaticResource AccentedSquareButtonStyle}" 
 							HorizontalContentAlignment="Stretch" 
 							VerticalContentAlignment="Stretch" 
@@ -227,41 +177,40 @@
 							Padding="15,5,27,5" 
 							BorderThickness="0" 
 							BorderBrush="White">
-							<Button.ContextMenu>
-								<ContextMenu>
-									<!--<MenuItem Header="Copy Project" />-->
-									<MenuItem 
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <!--<MenuItem Header="Copy Project" />-->
+                                    <MenuItem 
 										Header="Select Version" 
 										Command="{Binding CmdUnitySelectVersionDialog, Mode=OneWay, Source={StaticResource unity}}" 
 										CommandParameter="{Binding Item1}"
 									/>
-									<MenuItem 
+                                    <MenuItem 
 										Header="Open Locaiton In Explorer" 
 										Command="{Binding CmdOpenUnityProjectLocaiton, Mode=OneWay, Source={StaticResource unity}}" 
 										CommandParameter="{Binding Item1}" 
 									/>
 
-								</ContextMenu>
-							</Button.ContextMenu>
-							<Grid Width="Auto" VerticalAlignment="Stretch">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<Grid.RowDefinitions>
-									<RowDefinition/>
-									<RowDefinition/>
-								</Grid.RowDefinitions>
-								<Label Content="{Binding Item2, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-								<Label Content="{Binding Item1.LocalPath, Mode=OneWay}" Grid.Row="1"/>
-								<Label Content="{Binding Item3, Mode=OneWay}" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-							</Grid>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                            <Grid Width="Auto" VerticalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Label Content="{Binding Item2, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <Label Content="{Binding Item1.LocalPath, Mode=OneWay}" Grid.Row="1"/>
+                                <Label Content="{Binding Item3, Mode=OneWay}" Grid.Column="1" Grid.RowSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                            </Grid>
 
-						</Button>
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-			</ItemsControl>
-		</ScrollViewer>
-	</Grid>
-
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
 </Controls:MetroWindow>

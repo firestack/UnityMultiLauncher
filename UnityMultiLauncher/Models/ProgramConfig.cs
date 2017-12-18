@@ -49,21 +49,13 @@ namespace UnityMultiLauncher
 				appAccent = value.Item2.Name;
 			}
 		}
-		[JsonIgnore]
-        public HashSet<Uri> ValidUnityExeLocations {
-            get
-            {
-                unityExeLocations.RemoveWhere(item => !System.IO.File.Exists(item.LocalPath));
-                return unityExeLocations;
-            }
-            set => unityExeLocations = value;
-        }
+
 
         public string appTheme = "BaseLight";
 
 		public string appAccent = "Blue";
 
-        public HashSet<Uri> unityExeLocations = new HashSet<Uri>();
+		public UnityMultiFramework.Settings setings;
 
         public bool ShouldUseUnitySubVersion = false;
 	}

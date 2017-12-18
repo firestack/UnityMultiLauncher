@@ -20,6 +20,15 @@ namespace UnityMultiLauncher
 			Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 
 			base.OnStartup(e);
+
+			UnityMultiFramework.Unity.LoadSettings(ProgramConfig.conf.setings);
+		}
+
+		protected override void OnExit(ExitEventArgs e)
+		{
+			ProgramConfig.conf.setings = UnityMultiFramework.Unity.GetSettings();
+			ProgramConfig.conf.Save();
+			base.OnExit(e);
 		}
 
 		private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

@@ -28,26 +28,17 @@ namespace UnityMultiLauncher.ViewModels
 			if (a.ShowDialog() == DialogResult.OK)
 			{
 				var path = new System.IO.DirectoryInfo(a.SelectedPath);
-
-				var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
-				foreach (var location in path.GetFiles("Unity.exe", System.IO.SearchOption.AllDirectories))
-				{
-					AddUnityExe(location.FullName);
-				}
-
-				stopwatch.Stop();
-
-
+				UnityMultiFramework.Unity.Executables.AddIn(new Uri(path.ToString()));
+				UpdateProperty(nameof(Versions));
 			}
 		}
 
 		protected void AddUnityExe(string location)
 		{
-			ProgramConfig.conf.unityExeLocations.Add(new Uri(location));
-			UnityLocations.Add(new Uri(location));
-			UpdateProperty(nameof(UnityLocations));
-			ProgramConfig.conf.Save();
+			//ProgramConfig.conf.unityExeLocations.Add(new Uri(location));
+			//UnityLocations.Add(new Uri(location));
+			//UpdateProperty(nameof(UnityLocations));
+			//ProgramConfig.conf.Save();
 		}
 
 		protected void AddUnityVersion(object param)
@@ -68,10 +59,10 @@ namespace UnityMultiLauncher.ViewModels
 
 		protected void RemoveUnityVersion(object param)
 		{
-			ProgramConfig.conf.ValidUnityExeLocations.Remove(param as Uri);
-			UnityLocations.Remove(param as Uri);
-			ProgramConfig.conf.Save();
-			UpdateProperty(nameof(UnityLocations));
+			//ProgramConfig.conf.ValidUnityExeLocations.Remove(param as Uri);
+			//UnityLocations.Remove(param as Uri);
+			//ProgramConfig.conf.Save();
+			//UpdateProperty(nameof(UnityLocations));
 		}
 
 		protected void LaunchProject(Uri projectLocation, Uri unityExe = null)
@@ -120,10 +111,10 @@ namespace UnityMultiLauncher.ViewModels
 
 		protected void DuplicateUnityProject(Uri param)
 		{
-			ProgramConfig.conf.ValidUnityExeLocations.Remove(param);
-			UnityLocations.Remove(param);
-			ProgramConfig.conf.Save();
-			UpdateProperty(nameof(UnityLocations));
+			//ProgramConfig.conf.ValidUnityExeLocations.Remove(param);
+			//UnityLocations.Remove(param);
+			//ProgramConfig.conf.Save();
+			//UpdateProperty(nameof(UnityLocations));
 		}
 
 		protected void SelectUnityVersionDialog(Uri project, MetroDialogSettings dialogSettings = null)
@@ -156,7 +147,7 @@ namespace UnityMultiLauncher.ViewModels
 		{
 			get
 			{
-				return GetProperty() as ObservableCollection<Uri> ?? SetProperty(new ObservableCollection<Uri>(ProgramConfig.conf.ValidUnityExeLocations));
+				return GetProperty() as ObservableCollection<Uri> ?? SetProperty(new ObservableCollection<Uri>());
 			}
 		}
 
@@ -220,6 +211,10 @@ namespace UnityMultiLauncher.ViewModels
 
 			}
 		}
+
+		public IEnumerable<UnityMultiFramework.Project> Locations => UnityMultiFramework.Unity.Projects;
+
+		public IEnumerable<UnityMultiFramework.Executable> Versions => UnityMultiFramework.Unity.Executables;
 
 		public Uri SelectedProject
 		{

@@ -101,6 +101,7 @@
     <Compile Include="Controls\Converters\DummyDebugConverter.cs" />
     <Compile Include="Controls\Converters\GetProjectNameFromURI.cs" />
     <Compile Include="Controls\Converters\NumberToGoldenRatio.cs" />
+    <Compile Include="Controls\Converters\UnityLaunchCommand.cs" />
     <Compile Include="Controls\Converters\UnityProjectToUnityVersion.cs" />
     <Compile Include="Controls\Converters\UnityUriToUnityVersion.cs" />
     <Compile Include="Controls\AlignableWrapPanel.cs" />
@@ -204,6 +205,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\UnityMultiFramework\UnityMultiFramework.csproj">
+      <Project>{dc81ac27-1181-4cde-be6d-af159ff912c1}</Project>
+      <Name>UnityMultiFramework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WPFireUtil\WPFireUtil.csproj">
       <Project>{604b15c9-2391-4d76-b2ed-f4e427f288ae}</Project>
       <Name>WPFireUtil</Name>
